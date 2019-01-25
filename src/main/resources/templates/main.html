@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OSBG TimeTracker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <style>
+        .controls {
+            position: relative;
+            text-align: center;
+            top: 1em;
+            width: 100%;
+        }
+
+        .button {
+            color: cornflowerblue;
+            font-size: 4vw;
+            margin: 0 0.5em;
+            text-decoration: none;
+        }
+
+        .button:first-child {
+            margin-left: 0;
+        }
+
+        .button:last-child {
+            margin-right: 0;
+        }
+
+        .button:hover {
+            color: lightblue;
+        }
+
+        .stopwatch {
+            font-size: 12vw;
+            height: 20%;
+            line-height: 30vh;
+            text-align: center;
+        }
+
+        .results {
+            position: relative;
+        }
+
+        #worktime {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #worktime td, #worktime th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #worktime tr:nth-child(even){background-color: #f2f2f2;}
+        #worktime tr:hover {background-color: #ddd;}
+
+        #worktime th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="/main">Home</a></li>
+            <li><a href="#">My account</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <h3 th:text="'Welcome again, ' + ${session.currentuser.getId()}" th:unless="${session == null}"></h3>
+    <div id="location"></div>
+    <h4>Select a project: </h4>
+    <select id="select_projects_dropdown">
+    </select>
+    <div>
+    <nav class="controls">
+        <a href="#" class="button" onClick="stopwatch.start();">Start</a>
+        <a href="#" class="button" onClick="stopwatch.pause();">Pause</a>
+        <a href="#" class="button" onClick="stopwatch.stop();">Stop</a>
+        <!--<a href="#" class="button" onClick="stopwatch.restart();">Restart</a>
+        <a href="#" class="button" onClick="stopwatch.clear();">Clear Laps</a>-->
+    </nav>
+    <div class="stopwatch"></div>
+    <ul class="results"></ul>
+    </div>
+    <div>
+        <table id="worktime">
+            <tr>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Pauses (total)</th>
+                <th>Overtime</th>
+                <th>Total working time</th>
+            </tr>
+            <tr>
+                <td id="starttime"></td>
+                <td id="endtime"></td>
+                <td id="pauses"></td>
+                <td id="overtime"></td>
+                <td id="total"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+    //get current user
+    var currentuserid = [[${session.currentuser.getId()}]];
+    var starttimeglobal;
+    console.log(currentuserid);
+
+    //get current location
+    $.ajax({
+        url: "https://geoip-db.com/jsonp",
+        jsonpCallback: "callback",
+        dataType: "jsonp",
+        success: function( location ) {
+            $('#location').html("<h3> Your current location is: " + location.city + "</h3>");
+        }
+    });
+
+    //config dropdown menu
+    let dropdown = $('#select_projects_dropdown');
+
+    dropdown.empty();
+    dropdown.prop('selectedIndex', 0);
+
+    const url = 'http://localhost:8090/projects/all';
+    $.getJSON(url, function (data) {
+        console.log(data);
+        $.each(data, function (key, project) {
+            dropdown.append($('<option></option>').attr('value', project.id).text(project.name + ", " + project.location));
+        })
+    });
+
+
+    class Stopwatch {
+        constructor(display, results) {
+            this.running = false;
+            this.display = display;
+            this.results = results;
+            this.laps = [];
+            this.reset();
+            this.print(this.times);
+        }
+
+        reset() {
+            this.times = [ 0, 0, 0 ];
+        }
+
+        start() {
+            if (!this.time) this.time = performance.now();
+            if (!this.running) {
+                this.running = true;
+                requestAnimationFrame(this.step.bind(this));
+
+                let selectedprojectid = $('#select_projects_dropdown').val();
+                let starttime = Date.now();
+                starttimeglobal = starttime;
+
+                $.ajax({
+                    'url':'http://localhost:8090/timer/start',
+                    'method':'POST',
+                    'dataType': 'json',
+                    processData: false,
+                    'contentType': 'application/json',
+                    'data':JSON.stringify({
+                        "userid":currentuserid,
+                        "projectid":selectedprojectid,
+                        "starttime":starttime
+                    })
+                });
+
+                if($('#starttime').length) {
+                    let date, datevalues;
+                    date = new Date(starttime),
+                        datevalues = [
+                            date.getFullYear(),
+                            date.getMonth()+1,
+                            date.getDate(),
+                            date.getHours(),
+                            date.getMinutes(),
+                            date.getSeconds(),
+                        ];
+                    document.getElementById("starttime").innerHTML = (
+                        "Date: " + datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + "<br>" +
+                    "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);
+                }
+            }
+        }
+
+        pause() {
+            let times = this.times;
+            let li = document.createElement('li');
+            li.innerText = this.format(times);
+            this.results.appendChild(li);
+        }
+
+        stop() {
+            this.running = false;
+            this.time = null;
+
+            let selectedprojectid = $('#select_projects_dropdown').val();
+            let endtime = Date.now();
+
+            $.ajax({
+                'url':'http://localhost:8090/timer/stop',
+                'method':'PUT',
+                'dataType': 'json',
+                processData: false,
+                'contentType': 'application/json',
+                'data':JSON.stringify({
+                    "userid":currentuserid,
+                    "projectid":selectedprojectid,
+                    "starttime":starttimeglobal,
+                    "endtime":endtime
+                })
+            });
+
+            if($('#endtime').length) {
+                let date, datevalues;
+                date = new Date(endtime),
+                    datevalues = [
+                        date.getFullYear(),
+                        date.getMonth()+1,
+                        date.getDate(),
+                        date.getHours(),
+                        date.getMinutes(),
+                        date.getSeconds(),
+                    ];
+                    document.getElementById("endtime").innerHTML = (
+                        "Date: " + datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + "<br>" +
+                        "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);
+            }
+        }
+
+        restart() {
+            if (!this.time) this.time = performance.now();
+            if (!this.running) {
+                this.running = true;
+                requestAnimationFrame(this.step.bind(this));
+            }
+            this.reset();
+        }
+
+        clear() {
+            clearChildren(this.results);
+        }
+
+        step(timestamp) {
+            if (!this.running) return;
+            this.calculate(timestamp);
+            this.time = timestamp;
+            this.print();
+            requestAnimationFrame(this.step.bind(this));
+        }
+
+        calculate(timestamp) {
+            var diff = timestamp - this.time;
+            // Hundredths of a second are 100 ms
+            this.times[2] += diff / 10;
+            // Seconds are 100 hundredths of a second
+            if (this.times[2] >= 100) {
+                this.times[1] += 1;
+                this.times[2] -= 100;
+            }
+            // Minutes are 60 seconds
+            if (this.times[1] >= 60) {
+                this.times[0] += 1;
+                this.times[1] -= 60;
+            }
+        }
+
+        print() {
+            this.display.innerText = this.format(this.times);
+        }
+
+        format(times) {
+            return `\
+${pad0(times[0], 2)}:\
+${pad0(times[1], 2)}:\
+${pad0(Math.floor(times[2]), 2)}`;
+        }
+    }
+
+    function pad0(value, count) {
+        var result = value.toString();
+        for (; result.length < count; --count)
+            result = '0' + result;
+        return result;
+    }
+
+    function clearChildren(node) {
+        while (node.lastChild)
+            node.removeChild(node.lastChild);
+    }
+
+    let stopwatch = new Stopwatch(
+        document.querySelector('.stopwatch'),
+        document.querySelector('.results'));
+</script>
+</body>
+</html>
