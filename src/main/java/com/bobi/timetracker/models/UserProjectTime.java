@@ -26,6 +26,12 @@ public class UserProjectTime {
     @Column(name = "overtime")
     private Timestamp overtime;
 
+    @Column(name = "oldpause")
+    private Timestamp oldpausetime;
+
+    @Column(name = "newpause")
+    private Timestamp newpausetime;
+
     @Column(name = "pause")
     private Timestamp pausetime;
 
@@ -83,5 +89,21 @@ public class UserProjectTime {
 
     public void setStarttime(Timestamp starttime) {
         this.starttime = starttime;
+    }
+
+    public Timestamp getOldpausetime() {
+        return oldpausetime;
+    }
+
+    public void setOldpausetime(Timestamp oldpausetime) {
+        this.oldpausetime = oldpausetime;
+    }
+
+    public Timestamp getNewpausetime() {
+        return newpausetime;
+    }
+
+    public void setNewpausetime(Timestamp newpausetime) {
+        this.newpausetime = newpausetime;
     }
 }

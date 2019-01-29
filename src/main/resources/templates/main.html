@@ -122,6 +122,9 @@
     //get current user
     var currentuserid = [[${session.currentuser.getId()}]];
     var starttimeglobal;
+    var isinpause = false;
+    var isstart = false;
+    var isstartforfirsttime = false;
     console.log(currentuserid);
 
     //get current location
@@ -140,7 +143,7 @@
     dropdown.empty();
     dropdown.prop('selectedIndex', 0);
 
-    const url = 'http://localhost:8090/projects/all';
+    const url = 'http://localhost:8080/projects/all';
     $.getJSON(url, function (data) {
         console.log(data);
         $.each(data, function (key, project) {
@@ -164,51 +167,101 @@
         }
 
         start() {
-            if (!this.time) this.time = performance.now();
-            if (!this.running) {
-                this.running = true;
-                requestAnimationFrame(this.step.bind(this));
+            if (isstartforfirsttime == false) {
+                if (!this.time) this.time = performance.now();
+                if (!this.running) {
+                    this.running = true;
+                    requestAnimationFrame(this.step.bind(this));
 
+                    let selectedprojectid = $('#select_projects_dropdown').val();
+                    let starttime = Date.now();
+                    starttimeglobal = starttime;
+
+                    $.ajax({
+                        'url': 'http://localhost:8080/timer/start',
+                        'method': 'POST',
+                        'dataType': 'json',
+                        processData: false,
+                        'contentType': 'application/json',
+                        'data': JSON.stringify({
+                            "userid": currentuserid,
+                            "projectid": selectedprojectid,
+                            "starttime": starttime
+                        })
+                    });
+
+                    if ($('#starttime').length) {
+                        let date, datevalues;
+                        date = new Date(starttime),
+                            datevalues = [
+                                date.getFullYear(),
+                                date.getMonth() + 1,
+                                date.getDate(),
+                                date.getHours(),
+                                date.getMinutes(),
+                                date.getSeconds(),
+                            ];
+                        document.getElementById("starttime").innerHTML = (
+                            "Date: " + datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + "<br>" +
+                            "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);
+                    }
+                    isstartforfirsttime = true;
+                    isstart = true;
+                }
+            } else if (isstart == false) {
+                if (!this.time) this.time = performance.now();
+                if (!this.running) {
+                    this.running = true;
+                    requestAnimationFrame(this.step.bind(this));
+                }
+                isstart = true;
+                isinpause = false;
+            }
+        }
+
+        pause() {
+            //let times = this.times;
+            /*let li = document.createElement('li');
+            li.innerText = this.format(times);
+            this.results.appendChild(li);*/
+            if (isinpause == false) {
+                this.running = false;
                 let selectedprojectid = $('#select_projects_dropdown').val();
-                let starttime = Date.now();
-                starttimeglobal = starttime;
+                let pausetime = Date.now();
 
                 $.ajax({
-                    'url':'http://localhost:8090/timer/start',
-                    'method':'POST',
+                    'url': 'http://localhost:8080/timer/newpause',
+                    'method': 'PUT',
                     'dataType': 'json',
                     processData: false,
                     'contentType': 'application/json',
-                    'data':JSON.stringify({
-                        "userid":currentuserid,
-                        "projectid":selectedprojectid,
-                        "starttime":starttime
+                    'data': JSON.stringify({
+                        "userid": currentuserid,
+                        "projectid": selectedprojectid,
+                        "starttime": starttimeglobal,
+                        "newpausetime": pausetime
                     })
                 });
 
-                if($('#starttime').length) {
+                if ($('#pauses').length) {
                     let date, datevalues;
-                    date = new Date(starttime),
+                    date = new Date(pausetime),
                         datevalues = [
                             date.getFullYear(),
-                            date.getMonth()+1,
+                            date.getMonth() + 1,
                             date.getDate(),
                             date.getHours(),
                             date.getMinutes(),
                             date.getSeconds(),
                         ];
-                    document.getElementById("starttime").innerHTML = (
+                    document.getElementById("pauses").innerHTML = (
                         "Date: " + datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + "<br>" +
-                    "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);
+                        "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);
                 }
+            isinpause = true;
+            isstart = false;
+            } else { //in pause => do nothing
             }
-        }
-
-        pause() {
-            let times = this.times;
-            let li = document.createElement('li');
-            li.innerText = this.format(times);
-            this.results.appendChild(li);
         }
 
         stop() {
@@ -219,7 +272,7 @@
             let endtime = Date.now();
 
             $.ajax({
-                'url':'http://localhost:8090/timer/stop',
+                'url':'http://localhost:8080/timer/stop',
                 'method':'PUT',
                 'dataType': 'json',
                 processData: false,
