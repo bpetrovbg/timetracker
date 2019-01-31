@@ -214,6 +214,21 @@
                     this.running = true;
                     requestAnimationFrame(this.step.bind(this));
                 }
+                let selectedprojectid = $('#select_projects_dropdown').val();
+                let pausetime = Date.now();
+                $.ajax({
+                    'url': 'http://localhost:8080/timer/newpause',
+                    'method': 'PUT',
+                    'dataType': 'json',
+                    processData: false,
+                    'contentType': 'application/json',
+                    'data': JSON.stringify({
+                    "userid": currentuserid,
+                    "projectid": selectedprojectid,
+                    "starttime": starttimeglobal,
+                    "newpausetime": pausetime
+                                    })
+                                });
                 isstart = true;
                 isinpause = false;
             }
@@ -230,7 +245,7 @@
                 let pausetime = Date.now();
 
                 $.ajax({
-                    'url': 'http://localhost:8080/timer/newpause',
+                    'url': 'http://localhost:8080/timer/oldpause',
                     'method': 'PUT',
                     'dataType': 'json',
                     processData: false,
@@ -239,7 +254,7 @@
                         "userid": currentuserid,
                         "projectid": selectedprojectid,
                         "starttime": starttimeglobal,
-                        "newpausetime": pausetime
+                        "oldpausetime": pausetime
                     })
                 });
 

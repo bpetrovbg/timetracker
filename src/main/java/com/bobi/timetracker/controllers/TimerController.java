@@ -2,6 +2,7 @@ package com.bobi.timetracker.controllers;
 
 import com.bobi.timetracker.models.UserProjectTime;
 import com.bobi.timetracker.models.UserProjectTimeRepository;
+import com.bobi.timetracker.services.GetUserProjectTimeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -13,9 +14,11 @@ import java.util.List;
 @RestController
 public class TimerController {
     private final UserProjectTimeRepository userProjectTimeRepository;
+    private final GetUserProjectTimeService getUserProjectTimeService;
 
-    public TimerController(UserProjectTimeRepository userProjectTimeRepository) {
+    public TimerController(UserProjectTimeRepository userProjectTimeRepository, GetUserProjectTimeService getUserProjectTimeService) {
         this.userProjectTimeRepository = userProjectTimeRepository;
+        this.getUserProjectTimeService = getUserProjectTimeService;
     }
 
     @PostMapping(value = "/timer/start", consumes = "application/json")
@@ -31,6 +34,12 @@ public class TimerController {
         } else {
             userProjectTimeRepository.save(userProjectTime);
         }
+    }
+
+    @PostMapping(value = "/timer/newstart", consumes = "application/json")
+    public UserProjectTime getUserProjectTime(@RequestBody UserProjectTime userProjectTime) {
+        return getUserProjectTimeService.getUserByUseridAndProjectidAndStarttime(userProjectTime.getUserid(),
+                userProjectTime.getProjectid(), userProjectTime.getStarttime());
     }
 
         /*for (UserProjectTime userProjectTimeFromDB:userProjectTimeFromDBList) {
@@ -60,7 +69,7 @@ public class TimerController {
         }
     }
 
-    @PutMapping(value = "/timer/newpause", consumes = "application/json")
+    @PutMapping(value = "/timer/oldpause", consumes = "application/json")
     public void savePauseTime(@RequestBody UserProjectTime userProjectTime) {
         UserProjectTime userProjectTimeFromDB = userProjectTimeRepository.findByUseridAndProjectidAndStarttime(
                 userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
@@ -68,8 +77,31 @@ public class TimerController {
         if(userProjectTimeFromDB == null) {
             //not started => do nothing
         } else  {
-            userProjectTimeFromDB.setNewpausetime(userProjectTime.getNewpausetime());
+            userProjectTimeFromDB.setOldpausetime(userProjectTime.getOldpausetime());
             userProjectTimeRepository.save(userProjectTimeFromDB);
+        }
+    }
+
+    @PutMapping(value = "/timer/newpause", consumes = "application/json")
+    public void saveOldPauseTime(@RequestBody UserProjectTime userProjectTime) {
+        UserProjectTime userProjectTimeFromDB = getUserProjectTimeService.getUserByUseridAndProjectidAndStarttime(
+                userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
+        );
+        if(userProjectTimeFromDB == null) {
+            //doesnt exist => do nothing
+        } else if (userProjectTimeFromDB.getOldpausetime() != null) {
+            userProjectTimeFromDB.setNewpausetime(userProjectTime.getNewpausetime());
+            if (userProjectTimeFromDB.getPausetime() == null) {
+                long tempPauseTimeInMinutes;
+                tempPauseTimeInMinutes = compareTwoTimeStamps(userProjectTimeFromDB.getNewpausetime(), userProjectTimeFromDB.getOldpausetime());
+                userProjectTimeFromDB.setPausetime(tempPauseTimeInMinutes);
+                userProjectTimeRepository.save(userProjectTimeFromDB);
+            } else {
+                long tempPauseTimeInMinutes = userProjectTimeFromDB.getPausetime();
+                tempPauseTimeInMinutes += compareTwoTimeStamps(userProjectTimeFromDB.getNewpausetime(), userProjectTimeFromDB.getOldpausetime());
+                userProjectTimeFromDB.setPausetime(tempPauseTimeInMinutes);
+                userProjectTimeRepository.save(userProjectTimeFromDB);
+            }
         }
     }
 
@@ -81,5 +113,19 @@ public class TimerController {
     private String toDate(long timestamp) {
         LocalDate date = Instant.ofEpochMilli(timestamp * 1000).atZone(ZoneId.systemDefault()).toLocalDate();
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    public static long compareTwoTimeStamps(java.sql.Timestamp currentTime, java.sql.Timestamp oldTime)
+    {
+        long milliseconds1 = oldTime.getTime();
+        long milliseconds2 = currentTime.getTime();
+
+        long diff = milliseconds2 - milliseconds1;
+        long diffSeconds = diff / 1000;
+        long diffMinutes = diff / (60 * 1000);
+        long diffHours = diff / (60 * 60 * 1000);
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        return diffMinutes;
     }
 }

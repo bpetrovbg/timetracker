@@ -23,8 +23,9 @@ public class UserProjectTime {
     @Column(name = "endtime")
     private Timestamp endtime;
 
+    //overtime in minutes => Integer
     @Column(name = "overtime")
-    private Timestamp overtime;
+    private Integer overtime;
 
     @Column(name = "oldpause")
     private Timestamp oldpausetime;
@@ -32,8 +33,9 @@ public class UserProjectTime {
     @Column(name = "newpause")
     private Timestamp newpausetime;
 
+    //pausetime in minutes => Integer
     @Column(name = "pause")
-    private Timestamp pausetime;
+    private Long pausetime;
 
     public Project getProjectid() {
         return projectid;
@@ -43,11 +45,11 @@ public class UserProjectTime {
         this.projectid = projectid;
     }
 
-    public Timestamp getOvertime() {
+    public Integer getOvertime() {
         return overtime;
     }
 
-    public void setOvertime(Timestamp overtime) {
+    public void setOvertime(Integer overtime) {
         this.overtime = overtime;
     }
 
@@ -59,11 +61,11 @@ public class UserProjectTime {
         this.endtime = endtime;
     }
 
-    public Timestamp getPausetime() {
+    public Long getPausetime() {
         return pausetime;
     }
 
-    public void setPausetime(Timestamp pausetime) {
+    public void setPausetime(Long pausetime) {
         this.pausetime = pausetime;
     }
 
