@@ -35,6 +35,20 @@
             color: lightblue;
         }
 
+        .buttonstop {
+            color: red;
+        }
+        .buttonstop:hover {
+            color: firebrick;
+        }
+
+        .buttonstart {
+            color: green;
+        }
+        .buttonstart:hover {
+            color: lightgreen;
+        }
+
         .stopwatch {
             font-size: 12vw;
             height: 20%;
@@ -76,21 +90,22 @@
         <ul class="nav navbar-nav">
             <li><a href="/main">Home</a></li>
             <li><a href="#">My account</a></li>
+            <li><a href="/history">History</a></li>
         </ul>
     </div>
 </nav>
 
 <div class="container">
-    <h3 th:text="'Welcome again, ' + ${session.currentuser.getId()}" th:unless="${session == null}"></h3>
+    <h3 th:text="'Welcome again, ' + ${session.currentuser.getUsername()}" th:unless="${session == null}"></h3>
     <div id="location"></div>
     <h4>Select a project: </h4>
     <select id="select_projects_dropdown">
     </select>
     <div>
     <nav class="controls">
-        <a href="#" class="button" onClick="stopwatch.start();">Start</a>
+        <a href="#" class="button buttonstart" onClick="stopwatch.start();">Start</a>
         <a href="#" class="button" onClick="stopwatch.pause();">Pause</a>
-        <a href="#" class="button" onClick="stopwatch.stop();">Stop</a>
+        <a href="#" class="button buttonstop" onClick="stopwatch.stop();">Stop</a>
         <!--<a href="#" class="button" onClick="stopwatch.restart();">Restart</a>
         <a href="#" class="button" onClick="stopwatch.clear();">Clear Laps</a>-->
     </nav>
@@ -102,9 +117,9 @@
             <tr>
                 <th>Start time</th>
                 <th>End time</th>
-                <th>Pauses (total)</th>
-                <th>Overtime</th>
-                <th>Total working time</th>
+                <th>Pauses (total, minutes)</th>
+                <th>Overtime (minutes)</th>
+                <th>Total working time (minutes)</th>
             </tr>
             <tr>
                 <td id="starttime"></td>
@@ -125,6 +140,7 @@
     var isinpause = false;
     var isstart = false;
     var isstartforfirsttime = false;
+    var isstopped = false;
     console.log(currentuserid);
 
     //get current location
@@ -227,7 +243,11 @@
                     "projectid": selectedprojectid,
                     "starttime": starttimeglobal,
                     "newpausetime": pausetime
-                                    })
+                                    }),
+                                    success: function(data) {
+                                      console.log(data)
+                                      document.getElementById("pauses").innerText = data.pausetime
+                                    }
                                 });
                 isstart = true;
                 isinpause = false;
@@ -269,9 +289,10 @@
                             date.getMinutes(),
                             date.getSeconds(),
                         ];
-                    document.getElementById("pauses").innerHTML = (
+                    /*document.getElementById("pauses").innerHTML = (
                         "Date: " + datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + "<br>" +
                         "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);
+*/
                 }
             isinpause = true;
             isstart = false;
@@ -297,10 +318,14 @@
                     "projectid":selectedprojectid,
                     "starttime":starttimeglobal,
                     "endtime":endtime
-                })
+                }), success: function(data) {
+                    console.log(data)
+                    document.getElementById("overtime").innerText = data.overtime
+                    document.getElementById("total").innerText = data.totaltime;
+                }
             });
 
-            if($('#endtime').length) {
+            if($('#endtime').length && isstopped == false) {
                 let date, datevalues;
                 date = new Date(endtime),
                     datevalues = [
@@ -314,6 +339,7 @@
                     document.getElementById("endtime").innerHTML = (
                         "Date: " + datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + "<br>" +
                         "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);
+                    isstopped = true;
             }
         }
 
@@ -361,8 +387,8 @@
         format(times) {
             return `\
 ${pad0(times[0], 2)}:\
-${pad0(times[1], 2)}:\
-${pad0(Math.floor(times[2]), 2)}`;
+${pad0(times[1], 2)}`;
+//:\${pad0(Math.floor(times[2]), 2)}`;
         }
     }
 

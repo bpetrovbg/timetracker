@@ -53,7 +53,7 @@ public class TimerController {
         }*/
 
     @PutMapping(value = "/timer/stop", consumes = "application/json")
-    public void saveStopTime(@RequestBody UserProjectTime userProjectTime) {
+    public UserProjectTime saveStopTime(@RequestBody UserProjectTime userProjectTime) {
         //UserProjectTime userProjectTimeFromDB = userProjectTimeRepository.findByUseridAndProjectid(userProjectTime.getUserid(), userProjectTime.getProjectid());
         UserProjectTime userProjectTimeFromDB = userProjectTimeRepository.findByUseridAndProjectidAndStarttime(
                 userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
@@ -62,11 +62,27 @@ public class TimerController {
             //not started => do nothing
             //userProjectTimeRepository.save(userProjectTime);
         } else if (userProjectTimeFromDB.getEndtime() == null) {
+            long totalWorkingtime, overtime;
             userProjectTimeFromDB.setEndtime(userProjectTime.getEndtime());
+            totalWorkingtime = compareTwoTimeStamps(userProjectTimeFromDB.getEndtime(), userProjectTimeFromDB.getStarttime());
+
+            if(userProjectTimeFromDB.getPausetime() != null) {
+                totalWorkingtime = totalWorkingtime - userProjectTimeFromDB.getPausetime();
+            }
+            if(totalWorkingtime > 480) {
+                overtime = totalWorkingtime - 480;
+                userProjectTimeFromDB.setOvertime(overtime);
+            } else {
+                userProjectTimeFromDB.setOvertime((long) 0);
+            }
+            userProjectTimeFromDB.setTotaltime(totalWorkingtime);
             userProjectTimeRepository.save(userProjectTimeFromDB);
+            return userProjectTimeFromDB;
+
         } else {
             //do nothing => veche e prikluchil za denq...
         }
+        return null;
     }
 
     @PutMapping(value = "/timer/oldpause", consumes = "application/json")
@@ -83,7 +99,7 @@ public class TimerController {
     }
 
     @PutMapping(value = "/timer/newpause", consumes = "application/json")
-    public void saveOldPauseTime(@RequestBody UserProjectTime userProjectTime) {
+    public UserProjectTime saveOldPauseTime(@RequestBody UserProjectTime userProjectTime) {
         UserProjectTime userProjectTimeFromDB = getUserProjectTimeService.getUserByUseridAndProjectidAndStarttime(
                 userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
         );
@@ -103,6 +119,7 @@ public class TimerController {
                 userProjectTimeRepository.save(userProjectTimeFromDB);
             }
         }
+        return userProjectTimeFromDB;
     }
 
     @GetMapping(value = "/timer/all")

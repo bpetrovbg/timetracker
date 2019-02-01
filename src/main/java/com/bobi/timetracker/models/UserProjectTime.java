@@ -25,7 +25,7 @@ public class UserProjectTime {
 
     //overtime in minutes => Integer
     @Column(name = "overtime")
-    private Integer overtime;
+    private Long overtime;
 
     @Column(name = "oldpause")
     private Timestamp oldpausetime;
@@ -37,6 +37,28 @@ public class UserProjectTime {
     @Column(name = "pause")
     private Long pausetime;
 
+    @Column(name = "total")
+    private Long totaltime;
+
+    @Column(name = "comment")
+    private String comment;
+
+    public Long getTotaltime() {
+        return totaltime;
+    }
+
+    public void setTotaltime(Long totaltime) {
+        this.totaltime = totaltime;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Project getProjectid() {
         return projectid;
     }
@@ -45,11 +67,11 @@ public class UserProjectTime {
         this.projectid = projectid;
     }
 
-    public Integer getOvertime() {
+    public Long getOvertime() {
         return overtime;
     }
 
-    public void setOvertime(Integer overtime) {
+    public void setOvertime(Long overtime) {
         this.overtime = overtime;
     }
 

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OSBG TimeTracker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <style>
+        .controls {
+            position: relative;
+            text-align: center;
+            top: 1em;
+            width: 100%;
+        }
+
+        .button {
+            color: cornflowerblue;
+            font-size: 4vw;
+            margin: 0 0.5em;
+            text-decoration: none;
+        }
+
+        .button:first-child {
+            margin-left: 0;
+        }
+
+        .button:last-child {
+            margin-right: 0;
+        }
+
+        .button:hover {
+            color: lightblue;
+        }
+
+        .buttonstop {
+            color: red;
+        }
+        .buttonstop:hover {
+            color: firebrick;
+        }
+
+        .buttonstart {
+            color: green;
+        }
+        .buttonstart:hover {
+            color: lightgreen;
+        }
+
+        .stopwatch {
+            font-size: 12vw;
+            height: 20%;
+            line-height: 30vh;
+            text-align: center;
+        }
+
+        .results {
+            position: relative;
+        }
+
+        #worktime {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #worktime td, #worktime th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #worktime tr:nth-child(even){background-color: #f2f2f2;}
+        #worktime tr:hover {background-color: #ddd;}
+
+        #worktime th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="/main">Home</a></li>
+            <li><a href="#">My account</a></li>
+            <li><a href="/history">History</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+<h3 th:text="'History of ' + ${session.currentuser.getUsername()}" th:unless="${session == null}"></h3>
+</div>
+
+<div class="container">Select month:
+    <select id="select_month_dropdown">
+    <option value="1">January</option>
+    <option value="2">February</option>
+    <option value="3">March</option>
+    <option value="4">April</option>
+    <option value="5">May</option>
+    <option value="6">June</option>
+    <option value="7">July</option>
+    <option value="8">August</option>
+    <option value="9">September</option>
+    <option value="10">October</option>
+    <option value="11">November</option>
+    <option value="12">December</option>
+    </select>
+
+    <button onclick="queryUserHistory()">Refresh</button>
+    </div>
+
+    <div>
+        <table id="worktime">
+            <tr>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Pauses (total, minutes)</th>
+                <th>Overtime (minutes)</th>
+                <th>Total working time (minutes)</th>
+                <th>Project</th>
+                <th>Comment</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+    let currentuserid = [[${session.currentuser.getId()}]];
+    
+    function queryUserHistory() {
+      let dropdownmonth = $('#select_month_dropdown').val();
+      $.ajax({
+              'url': 'http://localhost:8080/history',
+              'method': 'POST',
+              'dataType': 'json',
+              processData: false,
+              'contentType': 'application/json',
+              'data': JSON.stringify({
+              "userid": currentuserid,
+              "month":dropdownmonth
+              }),
+              success: function(data) {
+              console.log(data)
+
+              for(var i in data) {
+                  if(data[i].comment == null) {
+                      data[i].comment = "";
+                  }
+                  $('#worktime > tbody:last-child').append('<tr><td id="starttime">' + data[i].starttime + '</td>+' +
+                   '<td id="endtime">' + data[i].endtime + '</td>' +
+                   '<td id="pauses">' + data[i].pausetime + '</td>' +
+                   '<td id="overtime">' + data[i].overtime + '</td>' +
+                   '<td id="total">' + data[i].totaltime +
+                   '<td id="project">' + data[i].projectid.name +
+                   '<td id="comment">' + data[i].comment +
+                   '</td></tr>');
+                    }
+              }
+              });
+    }
+</script>
+</body>
+</html>
