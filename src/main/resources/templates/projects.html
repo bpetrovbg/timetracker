@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OSBG TimeTracker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <style>
+        #projectstable {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #projectstable td, #projectstable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #projectstable tr:nth-child(even){background-color: #f2f2f2;}
+        #projectstable tr:hover {background-color: #ddd;}
+
+        #projectstable th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="/admin">Home</a></li>
+            <li><a href="#">My account</a></li>
+            <li><a href="/historyadmin">History</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li><a href="/users">Users</a></li>
+        </ul>
+    </div>
+</div>
+</nav>
+
+<h3>All projects: </h3>
+
+<div>
+    <table id="projectstable">
+        <thead>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Action</th>
+        </thead>
+        <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+    $.ajax({
+            'url': 'http://localhost:8080/projects/all',
+            'method': 'GET',
+            'dataType': 'json',
+            processData: false,
+            'contentType': 'application/json',
+            success: function(data) {
+            console.log(data);
+            for(var i in data) {
+                var id = data[i].id;
+                $('#projectstable > tbody:last-child').append('<tr><td id="id">' + data[i].id + '</td>+' +
+                                   '<td id="name">' + data[i].name + '</td>' +
+                                   '<td id="location">' + data[i].location + '</td>' +
+                                   '</td></tr>');
+                                   /*'<td><button onclick="deleteProject('+ data[i].id +');">' + 'Delete</button>' +
+                                   '</td></tr>');*/
+            }
+            }
+            });
+
+    /*function deleteProject(n) {
+        $.ajax({
+            url: '/projects/remove/' + n,
+            type: 'DELETE',
+            success: function(result) {
+                console.log(result)
+                if(result.localeCompare("Project deleted!")) {
+                    location.reload();
+                }
+            }
+        });
+           console.log("project id:" + n);
+    }*/
+</script>
+</body>

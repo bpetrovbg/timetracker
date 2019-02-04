@@ -43,6 +43,17 @@ public class UserProjectTime {
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "location")
+    private String location;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public Long getTotaltime() {
         return totaltime;
     }

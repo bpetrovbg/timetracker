@@ -25,4 +25,9 @@ public class MainController {
         }
         else return null;
     }
+
+    @GetMapping("/admin")
+    public ModelAndView getMainPageAdmin(HttpSession session) {
+        return new ModelAndView("admin");
+    }
 }

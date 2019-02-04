@@ -35,12 +35,22 @@ public class HistoryController {
         else return null;
     }
 
+    @GetMapping(value = "historyadmin")
+    public ModelAndView getMainPageAdmin(HttpSession session) {
+        if (session.getAttribute("currentuser") != null) {
+            User currentUser = (User) session.getAttribute("currentuser");
+            if (currentUser.getUserrole().getName().equals("admin")) {
+                return new ModelAndView("historyadmin");
+            }
+            return null;
+        } else return null;
+    }
+
     @PostMapping(value = "/history")
     public List<UserProjectTime> getUserHistoryForMonth(@RequestBody String jsonString) throws JSONException {
         JSONObject inputJSON = new JSONObject(jsonString);
         User currentUser = userRepository.findUserById((Integer) inputJSON.get("userid"));
         List<UserProjectTime> userProjectTimeList = userProjectTimeRepository.findByUserid(currentUser);
-
         List<UserProjectTime> allQueries = new ArrayList<UserProjectTime>();
 
         for (UserProjectTime userProjectTime : userProjectTimeList) {

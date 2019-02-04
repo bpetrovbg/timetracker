@@ -11,57 +11,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
     <style>
-        .controls {
-            position: relative;
-            text-align: center;
-            top: 1em;
-            width: 100%;
-        }
-
-        .button {
-            color: cornflowerblue;
-            font-size: 4vw;
-            margin: 0 0.5em;
-            text-decoration: none;
-        }
-
-        .button:first-child {
-            margin-left: 0;
-        }
-
-        .button:last-child {
-            margin-right: 0;
-        }
-
-        .button:hover {
-            color: lightblue;
-        }
-
-        .buttonstop {
-            color: red;
-        }
-        .buttonstop:hover {
-            color: firebrick;
-        }
-
-        .buttonstart {
-            color: green;
-        }
-        .buttonstart:hover {
-            color: lightgreen;
-        }
-
-        .stopwatch {
-            font-size: 12vw;
-            height: 20%;
-            line-height: 30vh;
-            text-align: center;
-        }
-
-        .results {
-            position: relative;
-        }
-
         #worktime {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
@@ -76,7 +25,7 @@
         #worktime tr:nth-child(even){background-color: #f2f2f2;}
         #worktime tr:hover {background-color: #ddd;}
 
-        #worktime th {
+        #worktime thead {
             padding-top: 8px;
             padding-bottom: 8px;
             text-align: left;
@@ -121,7 +70,7 @@
 
     <div>
         <table id="worktime">
-            <tr>
+            <thead>
                 <th>Start time</th>
                 <th>End time</th>
                 <th>Pauses (total, minutes)</th>
@@ -129,7 +78,8 @@
                 <th>Total working time (minutes)</th>
                 <th>Project</th>
                 <th>Comment</th>
-            </tr>
+            </thead>
+            <tbody></tbody>
         </table>
     </div>
 
@@ -138,6 +88,7 @@
     
     function queryUserHistory() {
       let dropdownmonth = $('#select_month_dropdown').val();
+      $("#worktime > tbody").empty();
       $.ajax({
               'url': 'http://localhost:8080/history',
               'method': 'POST',
@@ -155,12 +106,15 @@
                   if(data[i].comment == null) {
                       data[i].comment = "";
                   }
+                  if(data[i].pausetime == null) {
+                      data[i].pausetime = 0;
+                  }
                   $('#worktime > tbody:last-child').append('<tr><td id="starttime">' + data[i].starttime + '</td>+' +
                    '<td id="endtime">' + data[i].endtime + '</td>' +
                    '<td id="pauses">' + data[i].pausetime + '</td>' +
                    '<td id="overtime">' + data[i].overtime + '</td>' +
                    '<td id="total">' + data[i].totaltime +
-                   '<td id="project">' + data[i].projectid.name +
+                   '<td id="project">' + data[i].projectid.name + ", " + data[i].projectid.location + " / clocked-in from: " + data[i].location +
                    '<td id="comment">' + data[i].comment +
                    '</td></tr>');
                     }
