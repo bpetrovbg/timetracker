@@ -30,6 +30,110 @@
             background-color: #4CAF50;
             color: white;
         }
+
+        /* form starting stylings ------------------------------- */
+        #div1 {
+            position:relative;
+            margin-top:20px;
+            margin-bottom:45px;
+            display: inline-block;
+        }
+
+        #div2 {
+            position:relative;
+            margin-top:20px;
+            margin-bottom:45px;
+            display: inline-block;
+            vertical-align:top
+        }
+
+        input 				{
+          font-size:18px;
+          padding:10px 10px 10px 5px;
+          display:block;
+          width:300px;
+          border:none;
+          border-bottom:1px solid #757575;
+        }
+        input:focus 		{ outline:none; }
+
+        /* LABEL ======================================= */
+        label 				 {
+          color:#999;
+          font-size:18px;
+          font-weight:normal;
+          position:absolute;
+          pointer-events:none;
+          left:5px;
+          top:10px;
+          transition:0.2s ease all;
+          -moz-transition:0.2s ease all;
+          -webkit-transition:0.2s ease all;
+        }
+
+        /* active state */
+        input:focus ~ label, input:valid ~ label 		{
+          top:-20px;
+          font-size:14px;
+          color:#5264AE;
+        }
+
+        /* BOTTOM BARS ================================= */
+        .bar 	{ position:relative; display:block; width:300px; }
+        .bar:before, .bar:after 	{
+          content:'';
+          height:2px;
+          width:0;
+          bottom:1px;
+          position:absolute;
+          background:#5264AE;
+          transition:0.2s ease all;
+          -moz-transition:0.2s ease all;
+          -webkit-transition:0.2s ease all;
+        }
+        .bar:before {
+          left:50%;
+        }
+        .bar:after {
+          right:50%;
+        }
+
+        /* active state */
+        input:focus ~ .bar:before, input:focus ~ .bar:after {
+          width:50%;
+        }
+
+        /* HIGHLIGHTER ================================== */
+        .highlight {
+          position:absolute;
+          height:60%;
+          width:100px;
+          top:25%;
+          left:0;
+          pointer-events:none;
+          opacity:0.5;
+        }
+
+        /* active state */
+        input:focus ~ .highlight {
+          -webkit-animation:inputHighlighter 0.3s ease;
+          -moz-animation:inputHighlighter 0.3s ease;
+          animation:inputHighlighter 0.3s ease;
+        }
+
+        /* ANIMATIONS ================ */
+        @-webkit-keyframes inputHighlighter {
+        	from { background:#5264AE; }
+          to 	{ width:0; background:transparent; }
+        }
+        @-moz-keyframes inputHighlighter {
+        	from { background:#5264AE; }
+          to 	{ width:0; background:transparent; }
+        }
+        @keyframes inputHighlighter {
+        	from { background:#5264AE; }
+          to 	{ width:0; background:transparent; }
+        }
     </style>
 </head>
 <body>
@@ -46,20 +150,32 @@
 </div>
 </nav>
 
-<h3>All projects: </h3>
+<div class="container-fluid"><h4>All projects: </h4></div>
 
-<div>
+    <div>
     <table id="projectstable">
         <thead>
             <th>ID</th>
             <th>Name</th>
             <th>Location</th>
-            <th>Action</th>
         </thead>
         <tbody></tbody>
         </table>
     </div>
 
+    <div class="container-fluid">
+    <form class="form-inline">
+      <div id="div1">
+        <input type="text" class="form-control" id="nameinput" placeholder="Project Name">
+      </div>
+      <div id="div2">
+        <input type="text" class="form-control" id="locationinput" placeholder="Location">
+      </div>
+      <span class="form-group bmd-form-group"> <!-- needed to match padding for floating labels -->
+        <button type="submit" class="btn btn-primary" onclick="addProject();">ADD</button>
+      </span>
+    </form>
+    </div>
     <script>
     $.ajax({
             'url': 'http://localhost:8080/projects/all',
@@ -80,6 +196,34 @@
             }
             }
             });
+    
+    
+    function addProject() {
+        var projectname = $("#nameinput").val();
+        var location = $("#locationinput").val();
+
+        console.log(projectname);
+        console.log(location)
+      $.ajax({
+        'url': 'http://localhost:8080/projects/add',
+        'method': 'POST',
+        'dataType': 'json',
+        processData: false,
+        'contentType': 'application/json',
+        'data': JSON.stringify({
+        "name": projectname,
+        "location": location
+        }),
+        success: function(data) {
+                    console.log(data);
+                    for(var i in data) {
+                        var id = data[i].id;
+                        $('#projectstable > tbody:last-child').append('<tr><td id="id">' + data[i].id + '</td>+' +
+                                           '<td id="name">' + data[i].name + '</td>' +
+                                           '<td id="location">' + data[i].location + '</td>' +
+                                           '</td></tr>');
+      }}});
+    }
 
     /*function deleteProject(n) {
         $.ajax({

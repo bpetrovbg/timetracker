@@ -9,21 +9,21 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
     <style>
-        #worktime {
+        #userstable {
             font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
             border-collapse: collapse;
             width: 100%;
         }
 
-        #worktime td, #worktime th {
+        #userstable td, #userstable th {
             border: 1px solid #ddd;
             padding: 8px;
         }
 
-        #worktime tr:nth-child(even){background-color: #f2f2f2;}
-        #worktime tr:hover {background-color: #ddd;}
+        #userstable tr:nth-child(even){background-color: #f2f2f2;}
+        #userstable tr:hover {background-color: #ddd;}
 
-        #worktime th {
+        #userstable th {
             padding-top: 8px;
             padding-bottom: 8px;
             text-align: left;
@@ -45,4 +45,99 @@
     </div>
 </div>
 </nav>
+
+<div class="container-fluid"><h4>All users: </h4></div>
+
+    <div>
+    <table id="userstable">
+        <thead>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+        </thead>
+        <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <div>Select a user:
+            <select id="select_user_dropdown">
+            <option disabled selected value> -- select a user -- </option>
+            </select>
+            Select a role:
+            <select id="select_role_dropdown">
+            <option disabled selected value> -- select a role -- </option>
+            </select>
+        <button onclick="updateUserRole()">Update</button>
+        </div>
+    </div>
+
+
+    <script>
+    var userid;
+    var roleid;
+
+    //config dropdown menus
+    let userDropdown = $('#select_user_dropdown');
+    userDropdown.prop('selectedIndex', 0);
+    let rolesDropdown = $('#select_role_dropdown');
+    rolesDropdown.prop('selectedIndex', 0);
+
+    const urlUsers = 'http://localhost:8080/users/all';
+        $.getJSON(urlUsers, function (data) {
+            console.log(data);
+            $.each(data, function (key, user) {
+                userDropdown.append($('<option></option>').attr('value', user.id).text(user.username));
+            })
+        });
+
+        $(document).on("change", "#select_user_dropdown", function() {
+                userid = ($(this).find("option:selected").val())
+                console.log(userid);
+            });
+
+    const urlRoles = 'http://localhost:8080/roles/all';
+        $.getJSON(urlRoles, function (data) {
+            console.log(data);
+            $.each(data, function (key, role) {
+                rolesDropdown.append($('<option></option>').attr('value', role.id).text(role.name));
+            })
+        });
+
+        $(document).on("change", "#select_role_dropdown", function() {
+                        roleid = ($(this).find("option:selected").val())
+                        console.log(roleid);
+                    });
+
+        $.ajax({
+                'url': 'http://localhost:8080/users/all',
+                'method': 'GET',
+                'dataType': 'json',
+                processData: false,
+                'contentType': 'application/json',
+                success: function(data) {
+                console.log(data);
+                for(var i in data) {
+                    var id = data[i].id;
+                    $('#userstable > tbody:last-child').append('<tr><td id="id">' + data[i].id + '</td>+' +
+                                       '<td id="username">' + data[i].username + '</td>' +
+                                       '<td id="email">' + data[i].email + '</td>' +
+                                       '<td id="role">' + data[i].userrole.name + '</td>' +
+                                       '</td></tr>');
+                }
+                }
+                });
+
+        function updateUserRole() {
+            $.ajax({
+            'url': 'http://localhost:8080/users/' + userid + "/" + "roles/" + roleid,
+            'method': 'PUT',
+            success: function(data) {
+              location.reload();
+            }
+            })
+
+        }
+</script>
 </body>

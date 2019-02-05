@@ -1,12 +1,16 @@
 package com.bobi.timetracker.controllers;
 
+import com.bobi.timetracker.models.Role;
+import com.bobi.timetracker.models.RoleRepository;
 import com.bobi.timetracker.models.User;
 import com.bobi.timetracker.models.UserRepository;
+import com.bobi.timetracker.services.CheckIsAdminService;
 import com.bobi.timetracker.utilities.SHA256Helper;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -15,9 +19,13 @@ import java.util.Map;
 @RestController
 public class AccountController {
     private final UserRepository userRepository;
+    private final CheckIsAdminService isAdminService;
+    private final RoleRepository roleRepository;
 
-    public AccountController(UserRepository userRepository) {
+    public AccountController(UserRepository userRepository, CheckIsAdminService isAdminService, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.isAdminService = isAdminService;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping("/users/all")
@@ -41,5 +49,18 @@ public class AccountController {
         newUser.setPassword(passHelper.inputPassHash(body.get("password")));
         userRepository.save(newUser);
         return new ModelAndView("login");
+    }
+
+    @PutMapping(value = "/users/{userid}/roles/{roleid}")
+    public ModelAndView updateUserRole(@PathVariable("userid") int userid, @PathVariable("roleid") int roleid, HttpSession session) {
+        if(isAdminService.isAdmin(session)) {
+            User user = userRepository.findUserById(userid);
+            Role role = roleRepository.findRoleById(roleid);
+            user.setUserrole(role);
+            userRepository.save(user);
+            return new ModelAndView("users");
+        } else {
+            return null;
+        }
     }
 }

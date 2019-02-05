@@ -14,7 +14,9 @@ public class CheckIsAdminService {
     public boolean isAdmin(HttpSession session) {
         if(session.getAttribute("currentuser") != null) {
             User currentUser = (User) session.getAttribute("currentuser");
-            return currentUser.getUserrole().getName().equals("admin");
+            if(currentUser.getUserrole() != null) {
+                return currentUser.getUserrole().getName().equals("admin");
+            }
         } return false;
     }
 }
