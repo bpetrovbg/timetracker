@@ -12,26 +12,26 @@
 
     <style>
         #worktime {
-            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
+                    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
 
-        #worktime td, #worktime th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
+                #worktime td, #worktime th {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
 
-        #worktime tr:nth-child(even){background-color: #f2f2f2;}
-        #worktime tr:hover {background-color: #ddd;}
+                #worktime tr:nth-child(even){background-color: #f2f2f2;}
+                #worktime tr:hover {background-color: #ddd;}
 
-        #worktime thead {
-            padding-top: 8px;
-            padding-bottom: 8px;
-            text-align: left;
-            background-color: #4CAF50;
-            color: white;
-        }
+                #worktime th {
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    text-align: left;
+                    background-color: #4CAF50;
+                    color: white;
+                }
     </style>
 </head>
 <body>
@@ -49,7 +49,7 @@
 <h3 th:text="'History of ' + ${session.currentuser.getUsername()}" th:unless="${session == null}"></h3>
 </div>
 
-<div class="container">Select month:
+<div class="container">Select month and year:
     <select id="select_month_dropdown">
     <option value="1">January</option>
     <option value="2">February</option>
@@ -64,6 +64,15 @@
     <option value="11">November</option>
     <option value="12">December</option>
     </select>
+    <select id="select_year_dropdown">
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    </select>
 
     <button onclick="queryUserHistory()">Refresh</button>
     </div>
@@ -88,6 +97,7 @@
     
     function queryUserHistory() {
       let dropdownmonth = $('#select_month_dropdown').val();
+      let dropdownyear = $('#select_year_dropdown').val();
       $("#worktime > tbody").empty();
       $.ajax({
               'url': 'http://localhost:8080/history',
@@ -97,7 +107,8 @@
               'contentType': 'application/json',
               'data': JSON.stringify({
               "userid": currentuserid,
-              "month":dropdownmonth
+              "month":dropdownmonth,
+              "year":dropdownyear
               }),
               success: function(data) {
               console.log(data)
