@@ -32,10 +32,9 @@ public class HistoryController {
 
     @GetMapping(value = "/history")
     public ModelAndView getMainPage(HttpSession session) {
-        if(session.getAttribute("currentuser") != null) {
+        if (session.getAttribute("currentuser") != null) {
             return new ModelAndView("history");
-        }
-        else return null;
+        } else return null;
     }
 
     @GetMapping(value = "historyadmin")
@@ -57,7 +56,7 @@ public class HistoryController {
 
     @PostMapping(value = "/historyadmin")
     public List<UserProjectTime> getUserHistoryForMonthAdmin(@RequestBody String jsonString, HttpSession session) throws JSONException {
-        if(isAdminService.isAdmin(session)) {
+        if (isAdminService.isAdmin(session)) {
             return getUserProjectTimes(jsonString);
         }
         return null;
@@ -66,7 +65,7 @@ public class HistoryController {
     @GetMapping(value = "/history/exportall")
     public ModelAndView exportAllHistory() {
         List<UserProjectTime> allUserPRojectTimeList = (List<UserProjectTime>) userProjectTimeRepository.findAll();
-        return new ModelAndView (new ExcelView(), "userprojecttime", allUserPRojectTimeList);
+        return new ModelAndView(new ExcelView(), "userprojecttime", allUserPRojectTimeList);
     }
 
     @GetMapping(value = "/history/{userid}/{month}/{year}")
@@ -74,12 +73,12 @@ public class HistoryController {
                                                 @PathVariable("month") int month,
                                                 @PathVariable("year") int year, HttpSession session) throws JSONException {
 
-            JSONObject inputJSON = new JSONObject();
-            inputJSON.put("userid", userid);
-            inputJSON.put("month", month);
-            inputJSON.put("year", year);
-            List<UserProjectTime> userProjectTimeList = getUserProjectTimes(inputJSON.toString());
-            return new ModelAndView(new ExcelView(), "userprojecttime", userProjectTimeList);
+        JSONObject inputJSON = new JSONObject();
+        inputJSON.put("userid", userid);
+        inputJSON.put("month", month);
+        inputJSON.put("year", year);
+        List<UserProjectTime> userProjectTimeList = getUserProjectTimes(inputJSON.toString());
+        return new ModelAndView(new ExcelView(), "userprojecttime", userProjectTimeList);
 
     }
 
@@ -90,7 +89,7 @@ public class HistoryController {
         List<UserProjectTime> allQueries = new ArrayList<UserProjectTime>();
 
         for (UserProjectTime userProjectTime : userProjectTimeList) {
-            if(userProjectTime.getStarttime().toLocalDateTime().getMonth().getValue() == inputJSON.getInt("month")
+            if (userProjectTime.getStarttime().toLocalDateTime().getMonth().getValue() == inputJSON.getInt("month")
                     && userProjectTime.getStarttime().toLocalDateTime().getYear() == inputJSON.getInt("year")) {
                 allQueries.add(userProjectTime);
             }

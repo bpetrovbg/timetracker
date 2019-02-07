@@ -27,9 +27,9 @@ public class TimerController {
     public void saveStartTime(@RequestBody UserProjectTime userProjectTime) {
         List<UserProjectTime> userProjectTimeFromDBList = userProjectTimeRepository.findByUseridAndProjectid(userProjectTime.getUserid(), userProjectTime.getProjectid());
 
-        if(userProjectTimeFromDBList.size() > 0) {
-            for (UserProjectTime userProjectTimeFromDB:userProjectTimeFromDBList) {
-                if(userProjectTimeFromDB.getStarttime() == null) {
+        if (userProjectTimeFromDBList.size() > 0) {
+            for (UserProjectTime userProjectTimeFromDB : userProjectTimeFromDBList) {
+                if (userProjectTimeFromDB.getStarttime() == null) {
                     userProjectTimeRepository.save(userProjectTime);
                 }
             }
@@ -60,7 +60,7 @@ public class TimerController {
         UserProjectTime userProjectTimeFromDB = userProjectTimeRepository.findByUseridAndProjectidAndStarttime(
                 userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
         );
-        if(userProjectTimeFromDB == null) {
+        if (userProjectTimeFromDB == null) {
             //not started => do nothing
             //userProjectTimeRepository.save(userProjectTime);
         } else if (userProjectTimeFromDB.getEndtime() == null) {
@@ -68,10 +68,10 @@ public class TimerController {
             userProjectTimeFromDB.setEndtime(userProjectTime.getEndtime());
             totalWorkingtime = compareTwoTimeStamps(userProjectTimeFromDB.getEndtime(), userProjectTimeFromDB.getStarttime());
 
-            if(userProjectTimeFromDB.getPausetime() != null) {
+            if (userProjectTimeFromDB.getPausetime() != null) {
                 totalWorkingtime = totalWorkingtime - userProjectTimeFromDB.getPausetime();
             }
-            if(totalWorkingtime > 480) {
+            if (totalWorkingtime > 480) {
                 overtime = totalWorkingtime - 480;
                 userProjectTimeFromDB.setOvertime(overtime);
             } else {
@@ -92,9 +92,9 @@ public class TimerController {
         UserProjectTime userProjectTimeFromDB = userProjectTimeRepository.findByUseridAndProjectidAndStarttime(
                 userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
         );
-        if(userProjectTimeFromDB == null) {
+        if (userProjectTimeFromDB == null) {
             //not started => do nothing
-        } else  {
+        } else {
             userProjectTimeFromDB.setOldpausetime(userProjectTime.getOldpausetime());
             userProjectTimeRepository.save(userProjectTimeFromDB);
         }
@@ -105,7 +105,7 @@ public class TimerController {
         UserProjectTime userProjectTimeFromDB = getUserProjectTimeService.getUserByUseridAndProjectidAndStarttime(
                 userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
         );
-        if(userProjectTimeFromDB == null) {
+        if (userProjectTimeFromDB == null) {
             //doesnt exist => do nothing
         } else if (userProjectTimeFromDB.getOldpausetime() != null) {
             userProjectTimeFromDB.setNewpausetime(userProjectTime.getNewpausetime());
@@ -134,8 +134,7 @@ public class TimerController {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    public static long compareTwoTimeStamps(java.sql.Timestamp currentTime, java.sql.Timestamp oldTime)
-    {
+    public static long compareTwoTimeStamps(java.sql.Timestamp currentTime, java.sql.Timestamp oldTime) {
         long milliseconds1 = oldTime.getTime();
         long milliseconds2 = currentTime.getTime();
 

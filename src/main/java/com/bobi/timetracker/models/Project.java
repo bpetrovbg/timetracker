@@ -19,7 +19,8 @@ public class Project {
     @Column(name = "location", nullable = false)
     private String location;
 
-    public Project() {}
+    public Project() {
+    }
 
     public Project(String id) {
         this.setId(Integer.valueOf(id));

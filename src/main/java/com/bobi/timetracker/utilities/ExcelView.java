@@ -44,17 +44,17 @@ public class ExcelView extends AbstractXlsView {
         // create header row
         Row header = sheet.createRow(0);
         header.createCell(0).setCellValue("Username");
-      //  header.getCell(0).setCellStyle(style);
+        //  header.getCell(0).setCellStyle(style);
         header.createCell(1).setCellValue("Project");
-       // header.getCell(1).setCellStyle(style);
+        // header.getCell(1).setCellStyle(style);
         header.createCell(2).setCellValue("Project location / Clock-in location");
-      //  header.getCell(2).setCellStyle(style);
+        //  header.getCell(2).setCellStyle(style);
         header.createCell(3).setCellValue("Starttime");
-       // header.getCell(3).setCellStyle(style);
+        // header.getCell(3).setCellStyle(style);
         header.createCell(4).setCellValue("Endtime");
         //header.getCell(4).setCellStyle(style);
         header.createCell(5).setCellValue("Pauses");
-       // header.getCell(5).setCellStyle(style);
+        // header.getCell(5).setCellStyle(style);
         header.createCell(6).setCellValue("Overtime");
         //header.getCell(6).setCellStyle(style);
         header.createCell(7).setCellValue("Total time");
@@ -62,7 +62,7 @@ public class ExcelView extends AbstractXlsView {
         header.createCell(8).setCellValue("Comment");
 
         int rowCount = 1;
-        for(UserProjectTime userProjectTime : userProjectTimeList){
+        for (UserProjectTime userProjectTime : userProjectTimeList) {
             Row userProjectTimeRow = sheet.createRow(rowCount++);
             userProjectTimeRow.createCell(0).setCellValue(userProjectTime.getUserid().getUsername());
             userProjectTimeRow.createCell(1).setCellValue(userProjectTime.getProjectid().getName());

@@ -32,7 +32,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/projects/remove/{id}", method = RequestMethod.DELETE)
     public ModelAndView deleteProject(@PathVariable("id") int projectid, HttpSession session) {
-        if(checkIsAdminService.isAdmin(session)) {
+        if (checkIsAdminService.isAdmin(session)) {
             Project project = projectRepository.findProjectById(projectid);
             projectRepository.delete(project);
             return new ModelAndView("/projects");

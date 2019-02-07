@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OSBG TimeTracker MyAccount</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="/admin">Home</a></li>
+            <li><a href="/myaccount">My account</a></li>
+            <li><a href="/historyadmin">History</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li><a href="/users">Users</a></li>
+        </ul>
+    </div>
+</div>
+</nav>
+
+<div class="container">
+<h3>Account settings</h3>
+</div>
+
+<div class="container">
+<h3 th:text="'Username: ' + ${session.currentuser.getUsername()}" th:unless="${session == null}"></h3>
+<h3 th:text="'Role: ' + ${session.currentuser.getUserrole().getName()}" th:unless="${session == null}"></h3>
+<h3 id="mail" th:text="'Email: ' + ${session.currentuser.getEmail()}" th:unless="${session == null}"></h3>
+</div>
+<div class="container">
+  <form>
+    <div class="input-group">
+    <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter new email">
+    <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" onclick="updateEmail()">CHANGE EMAIL</button>
+       </span>
+    </div>
+  </form>
+</div>
+<div class="container">
+  <form>
+    <div class="input-group">
+    <input type="password" class="form-control" id="inputPassword" placeholder="Enter new password">
+       <input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm new password">
+              <span class="input-group-btn">
+                   <button type="button" class="btn btn-danger" onclick="updatePassword()">CHANGE PASSWORD</button>
+              </span>
+    </div>
+  </form>
+</div>
+
+<script>
+function updateEmail() {
+  let mail = $('#inputEmail').val();
+  console.log(mail)
+  $.ajax({
+    'url': 'http://localhost:8080/myaccount/mail',
+    'method': 'POST',
+    'dataType': 'text',
+    processData: false,
+    'contentType': 'application/json',
+    'data': JSON.stringify({
+        "mail":mail
+        }),
+    success: function() {
+        window.location.reload();
+    }
+    });
+  }
+
+  function updatePassword() {
+    let password = $('#inputPassword').val();
+    let passwordConfirm = $('#inputConfirmPassword').val();
+
+    if(password === passwordConfirm) {
+        $.ajax({
+            'url': 'http://localhost:8080//myaccount/changepassword',
+            'method': 'POST',
+            'dataType': 'text',
+            processData: false,
+            'contentType': 'application/json',
+            'data': JSON.stringify({
+                "newpassword":password
+                }),
+            success: function() {
+                window.location.reload();
+            }
+            });
+    }
+}
+</script>
+</body>

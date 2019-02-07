@@ -35,8 +35,8 @@ public class LoginController {
     public ModelAndView loginAndReturnUser(@RequestParam Map<String, String> body, HttpSession session) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         SHA256Helper helper = new SHA256Helper();
         User userToLogin = userRepository.findUserByUsername(body.get("username"));
-        if(userToLogin != null) {
-            if(helper.inputPassHash(body.get("password")).equals(userToLogin.getPassword())) {
+        if (userToLogin != null) {
+            if (helper.inputPassHash(body.get("password")).equals(userToLogin.getPassword())) {
                 if (userToLogin.getUserrole() != null && userToLogin.getUserrole().getName().equals("admin")) {
                     session.setAttribute("currentuser", userToLogin);
                     return new ModelAndView(new RedirectView("/admin", true));

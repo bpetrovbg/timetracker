@@ -24,7 +24,8 @@ public class User {
     @OneToOne
     private Role userrole;
 
-    public User() {}
+    public User() {
+    }
 
     public User(Integer id) {
         this.setId(id);

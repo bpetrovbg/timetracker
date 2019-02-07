@@ -26,7 +26,7 @@ public class AdminController {
 
     @GetMapping(value = "/projects")
     private ModelAndView getProjectsPage(HttpSession session) {
-        if(checkIsAdminService.isAdmin(session)) {
+        if (checkIsAdminService.isAdmin(session)) {
             return new ModelAndView("projects");
         } else {
             return null;
@@ -35,7 +35,7 @@ public class AdminController {
 
     @GetMapping(value = "/users")
     private ModelAndView getUsersPage(HttpSession session) {
-        if(checkIsAdminService.isAdmin(session)) {
+        if (checkIsAdminService.isAdmin(session)) {
             return new ModelAndView("users");
         } else {
             return null;

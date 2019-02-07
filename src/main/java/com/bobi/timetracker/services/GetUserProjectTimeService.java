@@ -19,6 +19,6 @@ public class GetUserProjectTimeService {
     public UserProjectTime getUserByUseridAndProjectidAndStarttime(User userid,
                                                                    Project projectid,
                                                                    Timestamp starttime) {
-        return userProjectTimeRepository.findByUseridAndProjectidAndStarttime(userid,projectid,starttime);
+        return userProjectTimeRepository.findByUseridAndProjectidAndStarttime(userid, projectid, starttime);
     }
 }

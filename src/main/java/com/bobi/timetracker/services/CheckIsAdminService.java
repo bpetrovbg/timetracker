@@ -12,11 +12,12 @@ public class CheckIsAdminService {
     }
 
     public boolean isAdmin(HttpSession session) {
-        if(session.getAttribute("currentuser") != null) {
+        if (session.getAttribute("currentuser") != null) {
             User currentUser = (User) session.getAttribute("currentuser");
-            if(currentUser.getUserrole() != null) {
+            if (currentUser.getUserrole() != null) {
                 return currentUser.getUserrole().getName().equals("admin");
             }
-        } return false;
+        }
+        return false;
     }
 }

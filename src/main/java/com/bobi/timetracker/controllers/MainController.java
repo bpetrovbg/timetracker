@@ -22,15 +22,14 @@ public class MainController {
     public ModelAndView getMainPage(HttpSession session) {
         /*User user = userRepository.findUserByUsername("bpetrov");
         session.setAttribute("currentuser", user);*/
-        if(session.getAttribute("currentuser") != null) {
+        if (session.getAttribute("currentuser") != null) {
             return new ModelAndView("main");
-        }
-        else return null;
+        } else return null;
     }
 
     @GetMapping("/admin")
     public ModelAndView getMainPageAdmin(HttpSession session) {
-        if(isAdminService.isAdmin(session)) {
+        if (isAdminService.isAdmin(session)) {
             return new ModelAndView("admin");
         } else {
             return null;
