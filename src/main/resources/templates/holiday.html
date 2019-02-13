@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OSBG TimeTracker Holidays</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <style>
+        #holidaytable {
+                    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+
+                #holidaytable td, #holidaytable th {
+                    border: 1px solid #ddd;
+                    padding: 8px;
+                }
+
+                #holidaytable tr:nth-child(even){background-color: #f2f2f2;}
+                #holidaytable tr:hover {background-color: #ddd;}
+
+                #holidaytable th {
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                    text-align: left;
+                    background-color: #4CAF50;
+                    color: white;
+                }
+
+                #div1 {
+                            position:relative;
+                            margin-top:20px;
+                            display: inline-block;
+                        }
+
+                        #div2 {
+                            position:relative;
+                            margin-top:20px;
+                            display: inline-block;
+                            vertical-align:top
+                        }
+
+                        #div3 {
+                                width: 400px;
+                                position:relative;
+                                display: inline-block;
+                        }
+                        #div4 {
+                                position:relative;
+                                display: inline-block;
+                                vertical-align:top
+                        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="/main">Home</a></li>
+            <li><a href="/myaccount">My account</a></li>
+            <li><a href="/history">History</a></li>
+            <li><a href="/holiday">Holidays</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+<h3 th:text="'Holidays of ' + ${session.currentuser.getUsername()}" th:unless="${session == null}"></h3>
+</div>
+
+    <div>
+        <table id="holidaytable">
+            <thead>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Description</th>
+                <th>Is approved?</th>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="container-fluid">
+    <div id="div1">
+        <p>Start date: <input type="text" id="startdate" required></p>
+        </div>
+        <div id="div2">
+        <p>End date: <input type="text" id="enddate" required></p>
+        </div>
+        <div class="container-fluid">
+        <div id="div3">
+        <input type="text" class="form-control" id="descriptioninput" placeholder="Description" required>
+        </div>
+        <div id="div4">
+        <button type="submit" class="btn btn-primary" onclick="addHoliday();">ADD</button>
+        </div>
+    </div>
+    </div>
+
+<script th:inline="javascript">
+    var alluserholidays = [[${holidaysList}]];
+    for(var i in alluserholidays) {
+                      $('#holidaytable > tbody:last-child').append('<tr><td id="startingdate">' + alluserholidays[i].startdate + '</td>+' +
+                       '<td id="endingdate">' + alluserholidays[i].enddate + '</td>' +
+                       '<td id="description">' + alluserholidays[i].description + '</td>' +
+                       '<td id="approved">' + alluserholidays[i].approved + '</td>' +
+                       '</td></tr>');
+                        }
+    console.log(alluserholidays);
+</script>
+
+<script>
+  var startdate;
+  var enddate;
+  var currentuserid = [[${session.currentuser.getId()}]];
+
+  $(document).ready(function () {
+      $(document).on('focus', '#startdate', function () {
+          $(this).datepicker({
+          dateFormat: 'dd/mm/yy',
+          onSelect: function(dateText) {
+              startdate = dateText;
+              console.log("Selected start date: " + startdate + "; input's current value: " + this.value);
+            }
+          });
+      });
+  });
+
+  $(document).ready(function () {
+        $(document).on('focus', '#enddate', function () {
+            $(this).datepicker({
+            dateFormat: 'dd/mm/yy',
+            onSelect: function(dateText) {
+                enddate = dateText;
+                console.log("Selected end date: " + enddate + "; input's current value: " + this.value);
+              }
+            });
+        });
+    });
+
+  function addHoliday() {
+    $.ajax({
+              'url': 'http://localhost:8080/holiday/add',
+              'method': 'POST',
+              'dataType': 'json',
+              processData: false,
+              'contentType': 'application/json',
+              'data': JSON.stringify({
+              "description": $("#descriptioninput").val(),
+              "startdate": startdate,
+              "enddate": enddate,
+              "userid": currentuserid
+              })});
+  }
+</script>
+</body>
+</html>

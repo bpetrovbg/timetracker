@@ -81,6 +81,14 @@
             background-color: #4CAF50;
             color: white;
         }
+
+        h3 {
+        text-align: center;
+        }
+
+        #projectdiv {
+        text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +99,7 @@
             <li><a href="/main">Home</a></li>
             <li><a href="/myaccount">My account</a></li>
             <li><a href="/history">History</a></li>
+            <li><a href="/holiday">Holidays</a></li>
         </ul>
     </div>
 </nav>
@@ -98,7 +107,7 @@
 <div class="container">
     <h3 th:text="'Welcome again, ' + ${session.currentuser.getUsername()}" th:unless="${session == null}"></h3>
     <div id="location"></div>
-    <div>Select a project:
+    <div id="projectdiv">Select a project:
              <select id="select_projects_dropdown">
              <option disabled selected value> -- select an option -- </option>
              </select></div>
