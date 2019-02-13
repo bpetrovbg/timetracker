@@ -1,25 +1,25 @@
 package com.bobi.timetracker.controllers;
 
 import com.bobi.timetracker.models.*;
-import com.bobi.timetracker.utilities.ExcelView;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.bobi.timetracker.services.CheckIsAdminService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.WebParam;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class HolidayController {
     private final UserRepository userRepository;
     private final HolidayRepository holidayRepository;
+    private final CheckIsAdminService isAdminService;
 
-    public HolidayController(UserRepository userRepository, HolidayRepository holidayRepository) {
+    public HolidayController(UserRepository userRepository, HolidayRepository holidayRepository, CheckIsAdminService isAdminService) {
         this.userRepository = userRepository;
         this.holidayRepository = holidayRepository;
+        this.isAdminService = isAdminService;
     }
 
     @GetMapping(value = "/holiday")
@@ -32,14 +32,6 @@ public class HolidayController {
         } else return null;
     }
 
-    @GetMapping(value = "/holiday/all")
-    public List<Holiday> getUserHolidays(HttpSession session) {
-        if (session.getAttribute("currentuser") != null) {
-            User user = (User) session.getAttribute("currentuser");
-            return holidayRepository.findHolidaysByUserid(user);
-        } else return null;
-    }
-
     @GetMapping(value = "/holiday/{userid}")
     public List<Holiday> getUserHolidays(@PathVariable("userid") int userid) {
         User user = userRepository.findUserById(userid);
@@ -47,14 +39,10 @@ public class HolidayController {
         return holidayList;
     }
 
-    /*@GetMapping(value = "/holiday/all")
-    public List<Holiday> getAll(HttpSession session) {
-            List<Holiday> holidayList = new ArrayList<>();
-            holidayList = holidayRepository.findHolidaysByUserid();
-            ModelAndView modelAndView = new ModelAndView("holiday");
-            modelAndView.addObject("holidayslist", holidayList);
-            return holidayList;
-    }*/
+    @GetMapping(value = "/holiday/all")
+    public List<Holiday> getAllHolidays() {
+        return (List<Holiday>) holidayRepository.findAll();
+    }
 
 
     @PostMapping(value = "holiday/add", consumes = "application/json", produces = "application/json")
@@ -65,6 +53,26 @@ public class HolidayController {
                 holidayRepository.save(newHoliday);
                 return newHoliday;
             } else return null;
-        } return null;
+        }
+        return null;
+    }
+
+    @GetMapping(value = "holidayadmin")
+    public ModelAndView getAdminHolidayPage(HttpSession session) {
+        if (isAdminService.isAdmin(session)) {
+            return new ModelAndView("holidayadmin");
+        }
+        return null;
+    }
+
+    @PutMapping (value="holidayadmin/{holidayid}")
+    public Holiday changeHolidayStatus(@PathVariable("holidayid") int holidayid, HttpSession session) {
+        if (isAdminService.isAdmin(session)) {
+            Holiday holiday = holidayRepository.findHolidayById(holidayid);
+            holiday.setApproved(!holiday.getApproved());
+            holidayRepository.save(holiday);
+            return holiday;
+        }
+        return null;
     }
 }

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface HolidayRepository extends CrudRepository<Holiday, Integer> {
     List<Holiday> findHolidaysByUserid(User userid);
+    Holiday findHolidayById(Integer holidayid);
 }

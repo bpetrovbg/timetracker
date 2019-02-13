@@ -66,21 +66,42 @@
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <ul class="nav navbar-nav">
-            <li><a href="/main">Home</a></li>
+            <li><a href="/admin">Home</a></li>
             <li><a href="/myaccount">My account</a></li>
-            <li><a href="/history">History</a></li>
-            <li><a href="/holiday">Holidays</a></li>
+            <li><a href="/historyadmin">History</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/holidayadmin">Holidays</a></li>
         </ul>
     </div>
+</div>
 </nav>
 
 <div class="container">
-<h3 th:text="'Holidays of ' + ${session.currentuser.getUsername()}" th:unless="${session == null}"></h3>
-</div>
+        <div>Select:
+            <select id="select_user_dropdown">
+            <option disabled selected value> -- select a user -- </option>
+            </select>
+                <select id="select_year_dropdown">
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                </select>
+
+        <button onclick="queryUserHistory()">Refresh</button>
+        <button onclick="downloadUserHistory()">Export</button>
+        <button onclick="exportAllHistory()">Export all</button>
+        </div>
+    </div>
 
     <div>
         <table id="holidaytable">
             <thead>
+                <th>User</th>
                 <th>Start date</th>
                 <th>End date</th>
                 <th>Description</th>
@@ -109,61 +130,48 @@
     </form>
 </div>
 
-<script th:inline="javascript">
-    var alluserholidays = [[${holidaysList}]];
-    for(var i in alluserholidays) {
-                      $('#holidaytable > tbody:last-child').append('<tr><td id="startingdate">' + alluserholidays[i].startdate + '</td>+' +
-                       '<td id="endingdate">' + alluserholidays[i].enddate + '</td>' +
-                       '<td id="description">' + alluserholidays[i].description + '</td>' +
-                       '<td id="approved">' + alluserholidays[i].approved + '</td>' +
-                       '</td></tr>');
-                        }
-    console.log(alluserholidays);
+<script>
+  //config dropdown menus
+          let userDropdown = $('#select_user_dropdown');
+          userDropdown.prop('selectedIndex', 0);
+
+          const urlUsers = 'http://localhost:8080/users/all';
+              $.getJSON(urlUsers, function (data) {
+                  //console.log(data);
+                  $.each(data, function (key, user) {
+                      userDropdown.append($('<option></option>').attr('value', user.id).text(user.username));
+                  })
+              });
+//$("#worktime > tbody").empty();
+          $.ajax({
+            'url': 'http://localhost:8080/holiday/all',
+            'method': 'GET',
+            'dataType': 'json',
+            processData: false,
+            'contentType': 'application/json',
+            success: function(data) {
+            console.log(data);
+            for(var i in data) {
+            $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].userid.username + '</td>+' +
+            '<td id="startdate">' + data[i].startdate + '</td>' +
+            '<td id="enddate">' + data[i].enddate + '</td>' +
+            '<td id="description">' + data[i].description + '</td>' +
+            '<td id="isapproved">' + '<button id="updatebtn" onclick="updateHolidayStatus(' + data[i].id + ")\">" + data[i].approved +
+            '</button></td></tr>');
+            }
+            }
+            });
 </script>
 
 <script>
-  var startdate;
-  var enddate;
-  var currentuserid = [[${session.currentuser.getId()}]];
-
-  $(document).ready(function () {
-      $(document).on('focus', '#startdate', function () {
-          $(this).datepicker({
-          dateFormat: 'dd/mm/yy',
-          onSelect: function(dateText) {
-              startdate = dateText;
-              console.log("Selected start date: " + startdate + "; input's current value: " + this.value);
-            }
-          });
-      });
-  });
-
-  $(document).ready(function () {
-        $(document).on('focus', '#enddate', function () {
-            $(this).datepicker({
-            dateFormat: 'dd/mm/yy',
-            onSelect: function(dateText) {
-                enddate = dateText;
-                console.log("Selected end date: " + enddate + "; input's current value: " + this.value);
-              }
-            });
-        });
-    });
-
-  function addHoliday() {
+function updateHolidayStatus(id) {
     $.ajax({
-              'url': 'http://localhost:8080/holiday/add',
-              'method': 'POST',
-              'dataType': 'json',
-              processData: false,
-              'contentType': 'application/json',
-              'data': JSON.stringify({
-              "description": $("#descriptioninput").val(),
-              "startdate": startdate,
-              "enddate": enddate,
-              "userid": currentuserid
-              })});
-  }
+        'url': 'http://localhost:8080/holidayadmin/' + id,
+        'method': 'PUT',
+        success: function() {
+          location.reload();
+        }
+})};
 </script>
 </body>
 </html>
