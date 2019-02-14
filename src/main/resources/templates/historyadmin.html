@@ -77,7 +77,7 @@
                                 </select>
 
         <button onclick="queryUserHistory()">Refresh</button>
-        <button onclick="downloadUserHistory()">Export</button>
+        <button onclick="downloadUserHolidays()">Export</button>
         <button onclick="exportAllHistory()">Export all</button>
         </div>
     </div>
@@ -154,10 +154,10 @@
                                     });
             }
 
-            function downloadUserHistory() {
+            function downloadUserHolidays() {
                 let dropdownmonth = $('#select_month_dropdown').val();
                 let dropdownyear = $('#select_year_dropdown').val();
-                let url = 'http://localhost:8080/history/' + userid + "/" + dropdownmonth + "/" + dropdownyear;
+                let url = 'http://localhost:8080/holiday/' + userid + "/" + dropdownyear;
                 window.open(url);
             }
 

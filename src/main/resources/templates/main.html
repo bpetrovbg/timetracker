@@ -485,5 +485,11 @@ ${pad0(times[1], 2)}`;
         document.querySelector('.stopwatch'),
         document.querySelector('.results'));
 </script>
+<script>
+    window.onbeforeunload = confirmExit;
+    function confirmExit() {
+        return "You have attempted to leave this page. Are you sure?";
+    }
+</script>
 </body>
 </html>

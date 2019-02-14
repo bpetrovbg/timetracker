@@ -92,9 +92,9 @@
                                 <option value="2025">2025</option>
                                 </select>
 
-        <button onclick="queryUserHistory()">Refresh</button>
+        <button onclick="queryUserHoliday()">Refresh</button>
         <button onclick="downloadUserHistory()">Export</button>
-        <button onclick="exportAllHistory()">Export all</button>
+        <button onclick="exportAllHolidays()">Export all</button>
         </div>
     </div>
 
@@ -172,6 +172,58 @@ function updateHolidayStatus(id) {
           location.reload();
         }
 })};
+</script>
+<script>
+var userid;
+$(document).on("change", "#select_user_dropdown", function() {
+    userid = ($(this).find("option:selected").val())
+    console.log(userid);
+    });
+function queryUserHoliday() {
+  let dropdownuser = $('#select_user_dropdown').val();
+  let dropdownyear = $('#select_year_dropdown').val();
+    $.ajax({
+        'url': 'http://localhost:8080/holidayadmin',
+        'method': 'POST',
+        'dataType': 'json',
+        processData: false,
+        'contentType': 'application/json',
+        'data': JSON.stringify({
+            "userid": userid,
+            "year":dropdownyear
+            }),
+            success: function(data) {
+                console.log(data)
+                $("#holidaytable > tbody").empty();
+                   for(var i in data) {
+                    $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].userid.username + '</td>+' +
+                                '<td id="startdate">' + data[i].startdate + '</td>' +
+                                '<td id="enddate">' + data[i].enddate + '</td>' +
+                                '<td id="description">' + data[i].description + '</td>' +
+                                '<td id="isapproved">' + '<button id="updatebtn" onclick="updateHolidayStatusForSingleUser(' + data[i].id + ")\">" + data[i].approved +
+                                '</button></td></tr>');
+                    }
+    }});
+}
+function updateHolidayStatusForSingleUser(id) {
+      $.ajax({
+        'url': 'http://localhost:8080/holidayadmin/' + id,
+        'method': 'PUT',
+        success: function() {
+        queryUserHoliday();
+      }
+    })}
+
+function downloadUserHoliday() {
+    let dropdownyear = $('#select_year_dropdown').val();
+    let url = 'http://localhost:8080/holiday/' + userid + "/" + dropdownyear;
+    window.open(url);
+    }
+
+function exportAllHolidays() {
+    let url = 'http://localhost:8080/holiday/exportall';
+    window.open(url);
+    }
 </script>
 </body>
 </html>

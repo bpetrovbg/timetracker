@@ -2,13 +2,16 @@ package com.bobi.timetracker.controllers;
 
 import com.bobi.timetracker.models.*;
 import com.bobi.timetracker.services.CheckIsAdminService;
+import com.bobi.timetracker.utilities.ExcelView;
+import com.bobi.timetracker.utilities.ExcelViewHolidays;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class HolidayController {
@@ -65,6 +68,14 @@ public class HolidayController {
         return null;
     }
 
+    @PostMapping(value = "holidayadmin")
+    public List<Holiday> getUserHolidays(@RequestBody String jsonString, HttpSession session) throws JSONException {
+        if (isAdminService.isAdmin(session)) {
+            return getUserHolidays(jsonString);
+        }
+        return null;
+    }
+
     @PutMapping (value="holidayadmin/{holidayid}")
     public Holiday changeHolidayStatus(@PathVariable("holidayid") int holidayid, HttpSession session) {
         if (isAdminService.isAdmin(session)) {
@@ -74,5 +85,38 @@ public class HolidayController {
             return holiday;
         }
         return null;
+    }
+
+    @GetMapping(value = "/holiday/exportall")
+    public ModelAndView exportAllHistory() {
+        List<Holiday> allHolidaysList = (List<Holiday>) holidayRepository.findAll();
+        return new ModelAndView(new ExcelViewHolidays(), "holidays", allHolidaysList);
+    }
+
+    @GetMapping(value = "/holiday/{userid}/{year}")
+    public ModelAndView exportSingleUserHolidays(@PathVariable("userid") int userid,
+                                                @PathVariable("year") int year, HttpSession session) throws JSONException {
+
+        JSONObject inputJSON = new JSONObject();
+        inputJSON.put("userid", userid);
+        inputJSON.put("year", year);
+        List<Holiday> holidayList = getUserHolidays(inputJSON.toString());
+        return new ModelAndView(new ExcelViewHolidays(), "holidays", holidayList);
+
+    }
+
+    private List<Holiday> getUserHolidays(String jsonString) throws JSONException {
+        JSONObject inputJSON = new JSONObject(jsonString);
+        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("userid").toString()));
+        List<Holiday> userHolidaysList= holidayRepository.findHolidaysByUserid(currentUser);
+        List<Holiday> allQueries = new ArrayList<>();
+
+        for (Holiday holiday : userHolidaysList) {
+            String[] singleHolidayElements = holiday.getStartdate().split("/");
+                if (singleHolidayElements[2].equals(inputJSON.getString("year"))) {
+                allQueries.add(holiday);
+            }
+        }
+        return allQueries;
     }
 }
