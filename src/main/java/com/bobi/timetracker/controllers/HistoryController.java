@@ -1,9 +1,6 @@
 package com.bobi.timetracker.controllers;
 
-import com.bobi.timetracker.models.User;
-import com.bobi.timetracker.models.UserProjectTime;
-import com.bobi.timetracker.models.UserProjectTimeRepository;
-import com.bobi.timetracker.models.UserRepository;
+import com.bobi.timetracker.models.*;
 import com.bobi.timetracker.services.CheckIsAdminService;
 import com.bobi.timetracker.services.GetUserProjectTimeService;
 import com.bobi.timetracker.utilities.ExcelView;
@@ -82,6 +79,20 @@ public class HistoryController {
 
     }
 
+    @GetMapping(value = "history/{userid}/{projectid}/{day}/{month}/{year}")
+    public UserProjectTime getSingleUserProjectTime(@PathVariable("userid") int userid, @PathVariable("projectid") int projectid,
+                                                    @PathVariable("day") int day, @PathVariable("month") int month,
+                                                    @PathVariable("year") int year) throws JSONException {
+        JSONObject inputJSON = new JSONObject();
+        inputJSON.put("userid", userid);
+        inputJSON.put("projectid", projectid);
+        inputJSON.put("day", day);
+        inputJSON.put("month", month);
+        inputJSON.put("year", year);
+        UserProjectTime userProjectTime = getSingleUserProjectTime(inputJSON.toString());
+        return userProjectTime;
+    }
+
     private List<UserProjectTime> getUserProjectTimes(String jsonString) throws JSONException {
         JSONObject inputJSON = new JSONObject(jsonString);
         User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("userid").toString()));
@@ -95,5 +106,21 @@ public class HistoryController {
             }
         }
         return allQueries;
+    }
+
+    private UserProjectTime getSingleUserProjectTime(String jsonString) throws JSONException {
+        JSONObject inputJSON = new JSONObject(jsonString);
+        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("userid").toString()));
+        List<UserProjectTime> userProjectTimeList = userProjectTimeRepository.findByUserid(currentUser);
+
+        for (UserProjectTime userProjectTime : userProjectTimeList) {
+            if (userProjectTime.getStarttime().toLocalDateTime().getDayOfMonth() == inputJSON.getInt("day") &&
+                userProjectTime.getStarttime().toLocalDateTime().getMonth().getValue() == inputJSON.getInt("month") &&
+                userProjectTime.getStarttime().toLocalDateTime().getYear() == inputJSON.getInt("year") &&
+                userProjectTime.getProjectid().getId() == inputJSON.getInt("projectid")) {
+                return userProjectTime;
+            }
+        }
+        return new UserProjectTime();
     }
 }
