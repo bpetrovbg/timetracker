@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
-
+//@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @RestController
 public class ProjectController {
     private final ProjectRepository projectRepository;

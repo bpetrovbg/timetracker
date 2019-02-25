@@ -7,8 +7,10 @@ import com.bobi.timetracker.utilities.ExcelView;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -26,14 +28,19 @@ public class TimerController {
     @PostMapping(value = "/timer/start", consumes = "application/json")
     public void saveStartTime(@RequestBody UserProjectTime userProjectTime) {
         List<UserProjectTime> userProjectTimeFromDBList = userProjectTimeRepository.findByUseridAndProjectid(userProjectTime.getUserid(), userProjectTime.getProjectid());
+        boolean queryExists = false;
 
         if (userProjectTimeFromDBList.size() > 0) {
+            LocalDateTime currentDate = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
             for (UserProjectTime userProjectTimeFromDB : userProjectTimeFromDBList) {
-                if (userProjectTimeFromDB.getStarttime() == null) {
-                    userProjectTimeRepository.save(userProjectTime);
+                if (userProjectTimeFromDB.getStarttime().toLocalDateTime().getDayOfMonth() == currentDate.getDayOfMonth()
+                        && userProjectTimeFromDB.getStarttime().toLocalDateTime().getMonthValue() == currentDate.getMonthValue()
+                        && userProjectTimeFromDB.getStarttime().toLocalDateTime().getYear() == currentDate.getYear()) {
+                    queryExists = true;
                 }
             }
-        } else {
+        }
+        if (!queryExists) {
             userProjectTimeRepository.save(userProjectTime);
         }
     }
