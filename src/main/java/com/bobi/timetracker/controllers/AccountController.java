@@ -8,13 +8,19 @@ import com.bobi.timetracker.services.CheckIsAdminService;
 import com.bobi.timetracker.utilities.SHA256Helper;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import reactor.netty.http.Cookies;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -68,16 +74,14 @@ public class AccountController {
     }
 
     @PutMapping(value = "/users/{userid}/roles/{roleid}")
-    public ModelAndView updateUserRole(@PathVariable("userid") int userid, @PathVariable("roleid") int roleid, HttpSession session) {
+    public ModelAndView updateUserRole(@PathVariable("userid") int userid, @PathVariable("roleid") int roleid, HttpSession session) throws IOException {
         if (isAdminService.isAdmin(session)) {
             User user = userRepository.findUserById(userid);
             Role role = roleRepository.findRoleById(roleid);
             user.setUserrole(role);
             userRepository.save(user);
             return new ModelAndView("users");
-        } else {
-            return null;
-        }
+        } return null;
     }
 
     @PostMapping(value = "/myaccount/mail", consumes = "application/json")
@@ -89,12 +93,11 @@ public class AccountController {
             userRepository.save(user);
             session.setAttribute("currentuser", user);
             return new ModelAndView("myaccount");
-        }
-        return null;
+        } return null;
     }
 
     @PostMapping(value = "/myaccount/changepassword", consumes = "application/json")
-    public ModelAndView changeUserPassword(@RequestBody String newPassword, HttpSession session) throws JSONException, UnsupportedEncodingException, NoSuchAlgorithmException {
+    public ModelAndView changeUserPassword(@RequestBody String newPassword, HttpSession session) throws JSONException, IOException, NoSuchAlgorithmException {
         if (session.getAttribute("currentuser") != null) {
             JSONObject jsonObject = new JSONObject(newPassword);
             User user = userRepository.findUserById(((User) session.getAttribute("currentuser")).getId());

@@ -272,7 +272,7 @@
     //dropdown.empty();
     dropdown.prop('selectedIndex', 0);
 
-    const url = 'http://localhost:8080/projects/all';
+    const url = 'http://10.10.40.138:8080/projects/all';
     $.getJSON(url, function (data) {
         console.log(data);
         $.each(data, function (key, project) {
@@ -289,7 +289,7 @@
         var date = new Date();
 
          $.ajax({
-                 'url': 'http://localhost:8080/history/' + currentuserid + '/' + currentprojectid + '/' + date.getDate()
+                 'url': 'http://10.10.40.138:8080/history/' + currentuserid + '/' + currentprojectid + '/' + date.getDate()
                  + '/' + (date.getMonth()+1) + '/' + date.getFullYear(),
                  'method': 'GET',
                  'dataType': 'json',
@@ -361,7 +361,7 @@
                                                     starttimeglobal = Date.now();
                                                 }
                                                 $.ajax({
-                                                    'url': 'http://localhost:8080/timer/start',
+                                                    'url': 'http://10.10.40.138:8080/timer/start',
                                                     'method': 'POST',
                                                     'dataType': 'json',
                                                     processData: false,
@@ -405,7 +405,7 @@
                                                 starttimeglobal = Date.now();
                                                 }
                                                 $.ajax({
-                                                    'url': 'http://localhost:8080/timer/start',
+                                                    'url': 'http://10.10.40.138:8080/timer/start',
                                                     'method': 'POST',
                                                     'dataType': 'json',
                                                     processData: false,
@@ -444,7 +444,7 @@
                                     let selectedprojectid = $('#select_projects_dropdown').val();
                                     let pausetime = Date.now();
                                     $.ajax({
-                                    'url': 'http://localhost:8080/timer/newpause',
+                                    'url': 'http://10.10.40.138:8080/timer/newpause',
                                     'method': 'PUT',
                                     'dataType': 'json',
                                     processData: false,
@@ -473,7 +473,7 @@
                 let pausetime = Date.now();
 
                 $.ajax({
-                    'url': 'http://localhost:8080/timer/oldpause',
+                    'url': 'http://10.10.40.138:8080/timer/oldpause',
                     'method': 'PUT',
                     'dataType': 'json',
                     processData: false,
@@ -512,7 +512,7 @@
             let endtime = Date.now();
 
             $.ajax({
-                'url':'http://localhost:8080/timer/stop',
+                'url':'http://10.10.40.138:8080/timer/stop',
                 'method':'PUT',
                 'dataType': 'json',
                 processData: false,

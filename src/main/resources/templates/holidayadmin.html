@@ -165,7 +165,7 @@
           let userDropdown = $('#select_user_dropdown');
           userDropdown.prop('selectedIndex', 0);
 
-          const urlUsers = 'http://localhost:8080/users/all';
+          const urlUsers = 'http://10.10.40.138:8080/users/all';
               $.getJSON(urlUsers, function (data) {
                   //console.log(data);
                   $.each(data, function (key, user) {
@@ -174,7 +174,7 @@
               });
 //$("#worktime > tbody").empty();
           $.ajax({
-            'url': 'http://localhost:8080/holiday/all',
+            'url': 'http://10.10.40.138:8080/holiday/all',
             'method': 'GET',
             'dataType': 'json',
             processData: false,
@@ -196,7 +196,7 @@
 <script>
 function updateHolidayStatus(id) {
     $.ajax({
-        'url': 'http://localhost:8080/holidayadmin/' + id,
+        'url': 'http://10.10.40.138:8080/holidayadmin/' + id,
         'method': 'PUT',
         success: function() {
           location.reload();
@@ -213,7 +213,7 @@ function queryUserHoliday() {
   let dropdownuser = $('#select_user_dropdown').val();
   let dropdownyear = $('#select_year_dropdown').val();
     $.ajax({
-        'url': 'http://localhost:8080/holidayadmin',
+        'url': 'http://10.10.40.138:8080/holidayadmin',
         'method': 'POST',
         'dataType': 'json',
         processData: false,
@@ -237,7 +237,7 @@ function queryUserHoliday() {
 }
 function updateHolidayStatusForSingleUser(id) {
       $.ajax({
-        'url': 'http://localhost:8080/holidayadmin/' + id,
+        'url': 'http://10.10.40.138:8080/holidayadmin/' + id,
         'method': 'PUT',
         success: function() {
         queryUserHoliday();
@@ -246,12 +246,12 @@ function updateHolidayStatusForSingleUser(id) {
 
 function downloadUserHoliday() {
     let dropdownyear = $('#select_year_dropdown').val();
-    let url = 'http://localhost:8080/holiday/' + userid + "/" + dropdownyear;
+    let url = 'http://10.10.40.138:8080/holiday/' + userid + "/" + dropdownyear;
     window.open(url);
     }
 
 function exportAllHolidays() {
-    let url = 'http://localhost:8080/holiday/exportall';
+    let url = 'http://10.10.40.138:8080/holiday/exportall';
     window.open(url);
     }
 </script>

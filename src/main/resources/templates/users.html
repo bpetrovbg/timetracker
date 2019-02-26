@@ -112,7 +112,7 @@
     let rolesDropdown = $('#select_role_dropdown');
     rolesDropdown.prop('selectedIndex', 0);
 
-    const urlUsers = 'http://localhost:8080/users/all';
+    const urlUsers = 'http://10.10.40.138:8080/users/all';
         $.getJSON(urlUsers, function (data) {
             console.log(data);
             $.each(data, function (key, user) {
@@ -125,7 +125,7 @@
                 console.log(userid);
             });
 
-    const urlRoles = 'http://localhost:8080/roles/all';
+    const urlRoles = 'http://10.10.40.138:8080/roles/all';
         $.getJSON(urlRoles, function (data) {
             console.log(data);
             $.each(data, function (key, role) {
@@ -139,7 +139,7 @@
                     });
 
         $.ajax({
-                'url': 'http://localhost:8080/users/all',
+                'url': 'http://10.10.40.138:8080/users/all',
                 'method': 'GET',
                 'dataType': 'json',
                 processData: false,
@@ -159,7 +159,7 @@
 
         function updateUserRole() {
             $.ajax({
-            'url': 'http://localhost:8080/users/' + userid + "/" + "roles/" + roleid,
+            'url': 'http://10.10.40.138:8080/users/' + userid + "/" + "roles/" + roleid,
             'method': 'PUT',
             success: function(data) {
               location.reload();

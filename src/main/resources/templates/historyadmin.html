@@ -107,7 +107,7 @@
                                 </select>
 
         <button onclick="queryUserHistory()">Refresh</button>
-        <button onclick="downloadUserHolidays()">Export</button>
+        <button onclick="downloadUserHistory()">Export</button>
         <button onclick="exportAllHistory()">Export all</button>
         </div>
     </div>
@@ -134,7 +134,7 @@
         let userDropdown = $('#select_user_dropdown');
         userDropdown.prop('selectedIndex', 0);
 
-        const urlUsers = 'http://localhost:8080/users/all';
+        const urlUsers = 'http://10.10.40.138:8080/users/all';
             $.getJSON(urlUsers, function (data) {
                 console.log(data);
                 $.each(data, function (key, user) {
@@ -152,7 +152,7 @@
               let dropdownyear = $('#select_year_dropdown').val();
               $("#worktime > tbody").empty();
               $.ajax({
-               'url': 'http://localhost:8080/historyadmin',
+               'url': 'http://10.10.40.138:8080/historyadmin',
                'method': 'POST',
                'dataType': 'json',
                processData: false,
@@ -184,15 +184,15 @@
                                     });
             }
 
-            function downloadUserHolidays() {
+            function downloadUserHistory() {
                 let dropdownmonth = $('#select_month_dropdown').val();
                 let dropdownyear = $('#select_year_dropdown').val();
-                let url = 'http://localhost:8080/holiday/' + userid + "/" + dropdownyear;
+                let url = 'http://10.10.40.138:8080/history/' + userid + "/"+ dropdownmonth + "/" + dropdownyear;
                 window.open(url);
             }
 
             function exportAllHistory() {
-               let url = 'http://localhost:8080/history/exportall';
+               let url = 'http://10.10.40.138:8080/history/exportall';
                window.open(url);
             }
 </script>

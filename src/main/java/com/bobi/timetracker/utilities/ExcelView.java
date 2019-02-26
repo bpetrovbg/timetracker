@@ -1,14 +1,11 @@
 package com.bobi.timetracker.utilities;
 
 import com.bobi.timetracker.models.UserProjectTime;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.servlet.view.document.AbstractXlsView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -29,17 +26,6 @@ public class ExcelView extends AbstractXlsView {
         // create excel xls sheet
         Sheet sheet = workbook.createSheet("All data");
         sheet.setDefaultColumnWidth(30);
-
-        // create style for header cells
-        /*CellStyle style = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        font.setFontName("Arial");
-        style.setFillForegroundColor(HSSFColor.BLUE.index);
-        //style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        //font.setBold(true);
-        font.setColor(HSSFColor.BLACK.index);
-        style.setFont(font);*/
-
 
         // create header row
         Row header = sheet.createRow(0);

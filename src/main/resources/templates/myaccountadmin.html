@@ -97,7 +97,7 @@ function updateEmail() {
   let mail = $('#inputEmail').val();
   console.log(mail)
   $.ajax({
-    'url': 'http://localhost:8080/myaccount/mail',
+    'url': 'http://10.10.40.138:8080/myaccount/mail',
     'method': 'POST',
     'dataType': 'text',
     processData: false,
@@ -117,7 +117,7 @@ function updateEmail() {
 
     if(password === passwordConfirm) {
         $.ajax({
-            'url': 'http://localhost:8080/myaccount/changepassword',
+            'url': 'http://10.10.40.138:8080/myaccount/changepassword',
             'method': 'POST',
             'dataType': 'text',
             processData: false,

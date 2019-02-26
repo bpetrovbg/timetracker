@@ -34,7 +34,7 @@ public class HistoryController {
         } else return null;
     }
 
-    @GetMapping(value = "historyadmin")
+    @GetMapping(value = "/historyadmin")
     public ModelAndView getMainPageAdmin(HttpSession session) {
         if (session.getAttribute("currentuser") != null) {
             User currentUser = (User) session.getAttribute("currentuser");
@@ -76,7 +76,6 @@ public class HistoryController {
         inputJSON.put("year", year);
         List<UserProjectTime> userProjectTimeList = getUserProjectTimes(inputJSON.toString());
         return new ModelAndView(new ExcelView(), "userprojecttime", userProjectTimeList);
-
     }
 
     @GetMapping(value = "history/{userid}/{projectid}/{day}/{month}/{year}")
