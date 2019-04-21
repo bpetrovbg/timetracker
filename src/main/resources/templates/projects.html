@@ -206,7 +206,7 @@
     </div>
     <script>
     $.ajax({
-            'url': 'http://10.10.40.138:8080/projects/all',
+            'url': 'http://192.168.0.102:8080/projects/all',
             'method': 'GET',
             'dataType': 'json',
             processData: false,
@@ -233,9 +233,10 @@
         console.log(projectname);
         console.log(location)
       $.ajax({
-        'url': 'http://10.10.40.138:8080/projects/add',
+        'url': 'http://192.168.0.102:8080/projects/add',
         'method': 'POST',
         'dataType': 'json',
+          'withCredentials':true,
         processData: false,
         'contentType': 'application/json',
         'data': JSON.stringify({

@@ -1,8 +1,7 @@
 package com.bobi.timetracker.controllers;
 
 import com.bobi.timetracker.models.ProjectRepository;
-import com.bobi.timetracker.models.User;
-import com.bobi.timetracker.models.UserProjectTimeRepository;
+import com.bobi.timetracker.models.RecordRepository;
 import com.bobi.timetracker.models.UserRepository;
 import com.bobi.timetracker.services.CheckIsAdminService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +14,13 @@ import javax.servlet.http.HttpSession;
 public class AdminController {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
-    private final UserProjectTimeRepository userProjectTimeRepository;
+    private final RecordRepository recordRepository;
     private final CheckIsAdminService checkIsAdminService = new CheckIsAdminService();
 
-    public AdminController(UserRepository userRepository, ProjectRepository projectRepository, UserProjectTimeRepository userProjectTimeRepository) {
+    public AdminController(UserRepository userRepository, ProjectRepository projectRepository, RecordRepository recordRepository) {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
-        this.userProjectTimeRepository = userProjectTimeRepository;
+        this.recordRepository = recordRepository;
     }
 
     @GetMapping(value = "/projects")

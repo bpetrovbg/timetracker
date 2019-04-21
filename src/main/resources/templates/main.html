@@ -243,7 +243,7 @@
 
 <script th:inline="javascript">
     //get current user
-    var currentuserid = [[${session.currentuser.getId()}]];
+    var currentuser = [[${session.currentuser.getId()}]];
     var starttimeglobal;
     var isinpause = false;
     var isstart = false;
@@ -251,9 +251,9 @@
     var isstopped = false;
     var currentlocation;
     var currentprojectname;
-    var currentprojectid;
+    var currentproject;
 
-    console.log(currentuserid);
+    console.log(currentuser);
 
     //get current location
     $.ajax({
@@ -272,7 +272,7 @@
     //dropdown.empty();
     dropdown.prop('selectedIndex', 0);
 
-    const url = 'http://10.10.40.138:8080/projects/all';
+    const url = 'http://192.168.0.102:8080/projects/all';
     $.getJSON(url, function (data) {
         console.log(data);
         $.each(data, function (key, project) {
@@ -283,13 +283,13 @@
     //dropdown on change assign current project
     $(document).on("change", "#select_projects_dropdown", function() {
         currentprojectname = ($(this).find("option:selected").text());
-        currentprojectid = ($(this).find("option:selected").val())
+        currentproject = ($(this).find("option:selected").val())
         console.log(currentprojectname);
-        console.log(currentprojectid);
+        console.log(currentproject);
         var date = new Date();
 
          $.ajax({
-                 'url': 'http://10.10.40.138:8080/history/' + currentuserid + '/' + currentprojectid + '/' + date.getDate()
+                 'url': 'http://192.168.0.102:8080/history/' + currentuser + '/' + currentproject + '/' + date.getDate()
                  + '/' + (date.getMonth()+1) + '/' + date.getFullYear(),
                  'method': 'GET',
                  'dataType': 'json',
@@ -311,8 +311,8 @@
                      document.getElementById("endtime").innerHTML = ("Date: " + localEndTime);
                      isstopped = true;
                  }
-                 var localStartTime = new Date(data.starttime);
-                 document.getElementById("starttime").innerHTML = ("Date: " + localStartTime);
+
+                 document.getElementById("starttime").innerHTML = (new Date(data.starttime));
                  document.getElementById("pauses").innerHTML = data.pausetime;
                  document.getElementById("overtime").innerHTML = data.overtime;
                  document.getElementById("total").innerHTML = data.totaltime;
@@ -355,20 +355,21 @@
                                             if (!this.running) {
                                                 this.running = true;
                                                 requestAnimationFrame(this.step.bind(this));
-                                                let selectedprojectid = $('#select_projects_dropdown').val();
+                                                let selectedproject = $('#select_projects_dropdown').val();
 
                                                 if(starttimeglobal == undefined || starttimeglobal == null) {
                                                     starttimeglobal = Date.now();
                                                 }
                                                 $.ajax({
-                                                    'url': 'http://10.10.40.138:8080/timer/start',
+                                                    'url': 'http://192.168.0.102:8080/timer/start',
                                                     'method': 'POST',
                                                     'dataType': 'json',
+                                                    'withCredentials':true,
                                                     processData: false,
                                                     'contentType': 'application/json',
                                                     'data': JSON.stringify({
-                                                        "userid": currentuserid,
-                                                        "projectid": selectedprojectid,
+                                                        "user": currentuser,
+                                                        "project": selectedproject,
                                                         "starttime": starttimeglobal,
                                                         "location":currentlocation,
                                                         "comment":comment
@@ -398,21 +399,22 @@
                                             if (!this.running) {
                                                 this.running = true;
                                                 requestAnimationFrame(this.step.bind(this));
-                                                let selectedprojectid = $('#select_projects_dropdown').val();
+                                                let selectedproject = $('#select_projects_dropdown').val();
                                                 /*let starttime = Date.now();
                                                 starttimeglobal = starttime;*/
                                                 if(starttimeglobal == undefined) {
                                                 starttimeglobal = Date.now();
                                                 }
                                                 $.ajax({
-                                                    'url': 'http://10.10.40.138:8080/timer/start',
+                                                    'url': 'http://192.168.0.102:8080/timer/start',
                                                     'method': 'POST',
                                                     'dataType': 'json',
+                                                    'withCredentials':true,
                                                     processData: false,
                                                     'contentType': 'application/json',
                                                     'data': JSON.stringify({
-                                                        "userid": currentuserid,
-                                                        "projectid": selectedprojectid,
+                                                        "user": currentuser,
+                                                        "project": selectedproject,
                                                         "starttime": starttimeglobal,
                                                         "location":currentlocation
                                                     })
@@ -441,17 +443,18 @@
                                         this.running = true;
                                         requestAnimationFrame(this.step.bind(this));
                                     }
-                                    let selectedprojectid = $('#select_projects_dropdown').val();
+                                    let selectedproject = $('#select_projects_dropdown').val();
                                     let pausetime = Date.now();
                                     $.ajax({
-                                    'url': 'http://10.10.40.138:8080/timer/newpause',
+                                    'url': 'http://192.168.0.102:8080/timer/newpause',
                                     'method': 'PUT',
                                     'dataType': 'json',
+                                        'withCredentials':true,
                                     processData: false,
                                     'contentType': 'application/json',
                                     'data': JSON.stringify({
-                                    "userid": currentuserid,
-                                    "projectid": selectedprojectid,
+                                    "user": currentuser,
+                                    "project": selectedproject,
                                     "starttime": starttimeglobal,
                                     "newpausetime": pausetime
                                     }),
@@ -469,18 +472,19 @@
         pause() {
             if (isinpause == false) {
                 this.running = false;
-                let selectedprojectid = $('#select_projects_dropdown').val();
+                let selectedproject = $('#select_projects_dropdown').val();
                 let pausetime = Date.now();
 
                 $.ajax({
-                    'url': 'http://10.10.40.138:8080/timer/oldpause',
+                    'url': 'http://192.168.0.102:8080/timer/oldpause',
                     'method': 'PUT',
                     'dataType': 'json',
+                    'withCredentials':true,
                     processData: false,
                     'contentType': 'application/json',
                     'data': JSON.stringify({
-                        "userid": currentuserid,
-                        "projectid": selectedprojectid,
+                        "user": currentuser,
+                        "project": selectedproject,
                         "starttime": starttimeglobal,
                         "oldpausetime": pausetime
                     })
@@ -508,18 +512,19 @@
             this.running = false;
             this.time = null;
 
-            let selectedprojectid = $('#select_projects_dropdown').val();
+            let selectedproject = $('#select_projects_dropdown').val();
             let endtime = Date.now();
 
             $.ajax({
-                'url':'http://10.10.40.138:8080/timer/stop',
+                'url':'http://192.168.0.102:8080/timer/stop',
                 'method':'PUT',
                 'dataType': 'json',
+                'withCredentials':true,
                 processData: false,
                 'contentType': 'application/json',
                 'data':JSON.stringify({
-                    "userid":currentuserid,
-                    "projectid":selectedprojectid,
+                    "user":currentuser,
+                    "project":selectedproject,
                     "starttime":starttimeglobal,
                     "endtime":endtime
                 }), success: function(data) {
@@ -619,7 +624,7 @@ ${pad0(times[1], 2)}`;
         return "You have attempted to leave this page. Are you sure?";
     }
 </script>
-<script>
+<!--<script>
 var idleTime = 0;
 $(document).ready(function () {
     //Increment the idle time counter every minute.
@@ -641,6 +646,6 @@ function timerIncrement() {
         stopwatch.pause();
     }
 }
-</script>
+</script>-->
 </body>
 </html>

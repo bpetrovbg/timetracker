@@ -73,8 +73,8 @@ public class AccountController {
         return new ModelAndView("login");
     }
 
-    @PutMapping(value = "/users/{userid}/roles/{roleid}")
-    public ModelAndView updateUserRole(@PathVariable("userid") int userid, @PathVariable("roleid") int roleid, HttpSession session) throws IOException {
+    @PutMapping(value = "/users/{user}/roles/{role}")
+    public ModelAndView updateUserRole(@PathVariable("user") int userid, @PathVariable("role") int roleid, HttpSession session) throws IOException {
         if (isAdminService.isAdmin(session)) {
             User user = userRepository.findUserById(userid);
             Role role = roleRepository.findRoleById(roleid);

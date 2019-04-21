@@ -2,7 +2,7 @@ package com.bobi.timetracker.controllers;
 
 import com.bobi.timetracker.models.*;
 import com.bobi.timetracker.services.CheckIsAdminService;
-import com.bobi.timetracker.services.GetUserProjectTimeService;
+import com.bobi.timetracker.services.GetRecordService;
 import com.bobi.timetracker.utilities.ExcelView;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,16 +15,14 @@ import java.util.List;
 
 @RestController
 public class HistoryController {
-    private final UserProjectTimeRepository userProjectTimeRepository;
+    private final RecordRepository recordRepository;
     private final UserRepository userRepository;
     private final CheckIsAdminService isAdminService;
-    private final GetUserProjectTimeService userProjectTimeService;
 
-    public HistoryController(UserProjectTimeRepository userProjectTimeRepository, UserRepository userRepository, CheckIsAdminService isAdminService, GetUserProjectTimeService userProjectTimeService) {
-        this.userProjectTimeRepository = userProjectTimeRepository;
+    public HistoryController(RecordRepository recordRepository, UserRepository userRepository, CheckIsAdminService isAdminService) {
+        this.recordRepository = recordRepository;
         this.userRepository = userRepository;
         this.isAdminService = isAdminService;
-        this.userProjectTimeService = userProjectTimeService;
     }
 
     @GetMapping(value = "/history")
@@ -46,13 +44,13 @@ public class HistoryController {
     }
 
     @PostMapping(value = "/history")
-    public List<UserProjectTime> getUserHistoryForMonth(@RequestBody String jsonString) throws JSONException {
+    public List<Record> getUserHistoryForMonth(@RequestBody String jsonString) throws JSONException {
         return getUserProjectTimes(jsonString);
     }
 
 
     @PostMapping(value = "/historyadmin")
-    public List<UserProjectTime> getUserHistoryForMonthAdmin(@RequestBody String jsonString, HttpSession session) throws JSONException {
+    public List<Record> getUserHistoryForMonthAdmin(@RequestBody String jsonString, HttpSession session) throws JSONException {
         if (isAdminService.isAdmin(session)) {
             return getUserProjectTimes(jsonString);
         }
@@ -61,65 +59,64 @@ public class HistoryController {
 
     @GetMapping(value = "/history/exportall")
     public ModelAndView exportAllHistory() {
-        List<UserProjectTime> allUserPRojectTimeList = (List<UserProjectTime>) userProjectTimeRepository.findAll();
+        List<Record> allUserPRojectTimeList = (List<Record>) recordRepository.findAll();
         return new ModelAndView(new ExcelView(), "userprojecttime", allUserPRojectTimeList);
     }
 
-    @GetMapping(value = "/history/{userid}/{month}/{year}")
-    public ModelAndView exportSingleUserHistory(@PathVariable("userid") int userid,
+    @GetMapping(value = "/history/{user}/{month}/{year}")
+    public ModelAndView exportSingleUserHistory(@PathVariable("user") int user,
                                                 @PathVariable("month") int month,
                                                 @PathVariable("year") int year, HttpSession session) throws JSONException {
 
         JSONObject inputJSON = new JSONObject();
-        inputJSON.put("userid", userid);
+        inputJSON.put("user", user);
         inputJSON.put("month", month);
         inputJSON.put("year", year);
-        List<UserProjectTime> userProjectTimeList = getUserProjectTimes(inputJSON.toString());
-        return new ModelAndView(new ExcelView(), "userprojecttime", userProjectTimeList);
+        List<Record> recordList = getUserProjectTimes(inputJSON.toString());
+        return new ModelAndView(new ExcelView(), "userprojecttime", recordList);
     }
 
-    @GetMapping(value = "history/{userid}/{projectid}/{day}/{month}/{year}")
-    public UserProjectTime getSingleUserProjectTime(@PathVariable("userid") int userid, @PathVariable("projectid") int projectid,
-                                                    @PathVariable("day") int day, @PathVariable("month") int month,
-                                                    @PathVariable("year") int year) throws JSONException {
+    @GetMapping(value = "history/{user}/{project}/{day}/{month}/{year}")
+    public Record getSingleUserProjectTime(@PathVariable("user") int user, @PathVariable("project") int project,
+                                           @PathVariable("day") int day, @PathVariable("month") int month,
+                                           @PathVariable("year") int year) throws JSONException {
         JSONObject inputJSON = new JSONObject();
-        inputJSON.put("userid", userid);
-        inputJSON.put("projectid", projectid);
+        inputJSON.put("user", user);
+        inputJSON.put("project", project);
         inputJSON.put("day", day);
         inputJSON.put("month", month);
         inputJSON.put("year", year);
-        UserProjectTime userProjectTime = getSingleUserProjectTime(inputJSON.toString());
-        return userProjectTime;
+        return getSingleUserProjectTime(inputJSON.toString());
     }
 
-    private List<UserProjectTime> getUserProjectTimes(String jsonString) throws JSONException {
+    private List<Record> getUserProjectTimes(String jsonString) throws JSONException {
         JSONObject inputJSON = new JSONObject(jsonString);
-        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("userid").toString()));
-        List<UserProjectTime> userProjectTimeList = userProjectTimeRepository.findByUserid(currentUser);
-        List<UserProjectTime> allQueries = new ArrayList<UserProjectTime>();
+        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("user").toString()));
+        List<Record> recordList = recordRepository.findByUser(currentUser);
+        List<Record> allQueries = new ArrayList<Record>();
 
-        for (UserProjectTime userProjectTime : userProjectTimeList) {
-            if (userProjectTime.getStarttime().toLocalDateTime().getMonth().getValue() == inputJSON.getInt("month")
-                    && userProjectTime.getStarttime().toLocalDateTime().getYear() == inputJSON.getInt("year")) {
-                allQueries.add(userProjectTime);
+        for (Record record : recordList) {
+            if (record.getStarttime().toLocalDateTime().getMonth().getValue() == inputJSON.getInt("month")
+                    && record.getStarttime().toLocalDateTime().getYear() == inputJSON.getInt("year")) {
+                allQueries.add(record);
             }
         }
         return allQueries;
     }
 
-    private UserProjectTime getSingleUserProjectTime(String jsonString) throws JSONException {
+    private Record getSingleUserProjectTime(String jsonString) throws JSONException {
         JSONObject inputJSON = new JSONObject(jsonString);
-        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("userid").toString()));
-        List<UserProjectTime> userProjectTimeList = userProjectTimeRepository.findByUserid(currentUser);
+        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("user").toString()));
+        List<Record> recordList = recordRepository.findByUser(currentUser);
 
-        for (UserProjectTime userProjectTime : userProjectTimeList) {
-            if (userProjectTime.getStarttime().toLocalDateTime().getDayOfMonth() == inputJSON.getInt("day") &&
-                userProjectTime.getStarttime().toLocalDateTime().getMonth().getValue() == inputJSON.getInt("month") &&
-                userProjectTime.getStarttime().toLocalDateTime().getYear() == inputJSON.getInt("year") &&
-                userProjectTime.getProjectid().getId() == inputJSON.getInt("projectid")) {
-                return userProjectTime;
+        for (Record record : recordList) {
+            if (record.getStarttime().toLocalDateTime().getDayOfMonth() == inputJSON.getInt("day") &&
+                record.getStarttime().toLocalDateTime().getMonth().getValue() == inputJSON.getInt("month") &&
+                record.getStarttime().toLocalDateTime().getYear() == inputJSON.getInt("year") &&
+                record.getProject().getId() == inputJSON.getInt("project")) {
+                return record;
             }
         }
-        return new UserProjectTime();
+        return new Record();
     }
 }

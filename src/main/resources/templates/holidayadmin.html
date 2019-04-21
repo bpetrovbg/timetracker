@@ -123,7 +123,7 @@
                                 </select>
 
         <button onclick="queryUserHoliday()">Refresh</button>
-        <button onclick="downloadUserHistory()">Export</button>
+        <button onclick="downloadUserHoliday()">Export</button>
         <button onclick="exportAllHolidays()">Export all</button>
         </div>
     </div>
@@ -165,7 +165,7 @@
           let userDropdown = $('#select_user_dropdown');
           userDropdown.prop('selectedIndex', 0);
 
-          const urlUsers = 'http://10.10.40.138:8080/users/all';
+          const urlUsers = 'http://192.168.0.102:8080/users/all';
               $.getJSON(urlUsers, function (data) {
                   //console.log(data);
                   $.each(data, function (key, user) {
@@ -174,7 +174,7 @@
               });
 //$("#worktime > tbody").empty();
           $.ajax({
-            'url': 'http://10.10.40.138:8080/holiday/all',
+            'url': 'http://192.168.0.102:8080/holiday/all',
             'method': 'GET',
             'dataType': 'json',
             processData: false,
@@ -182,7 +182,7 @@
             success: function(data) {
             console.log(data);
             for(var i in data) {
-            $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].userid.username + '</td>+' +
+            $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].user.username + '</td>+' +
             '<td id="startdate">' + data[i].startdate + '</td>' +
             '<td id="enddate">' + data[i].enddate + '</td>' +
             '<td id="description">' + data[i].description + '</td>' +
@@ -196,7 +196,7 @@
 <script>
 function updateHolidayStatus(id) {
     $.ajax({
-        'url': 'http://10.10.40.138:8080/holidayadmin/' + id,
+        'url': 'http://192.168.0.102:8080/holidayadmin/' + id,
         'method': 'PUT',
         success: function() {
           location.reload();
@@ -204,29 +204,30 @@ function updateHolidayStatus(id) {
 })};
 </script>
 <script>
-var userid;
+var user;
 $(document).on("change", "#select_user_dropdown", function() {
-    userid = ($(this).find("option:selected").val())
-    console.log(userid);
+    user = ($(this).find("option:selected").val())
+    console.log(user);
     });
 function queryUserHoliday() {
   let dropdownuser = $('#select_user_dropdown').val();
   let dropdownyear = $('#select_year_dropdown').val();
     $.ajax({
-        'url': 'http://10.10.40.138:8080/holidayadmin',
+        'url': 'http://192.168.0.102:8080/holidayadmin',
         'method': 'POST',
+        'withCredentials':true,
         'dataType': 'json',
         processData: false,
         'contentType': 'application/json',
         'data': JSON.stringify({
-            "userid": userid,
+            "user": user,
             "year":dropdownyear
             }),
             success: function(data) {
                 console.log(data)
                 $("#holidaytable > tbody").empty();
                    for(var i in data) {
-                    $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].userid.username + '</td>+' +
+                    $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].user.username + '</td>+' +
                                 '<td id="startdate">' + data[i].startdate + '</td>' +
                                 '<td id="enddate">' + data[i].enddate + '</td>' +
                                 '<td id="description">' + data[i].description + '</td>' +
@@ -237,7 +238,7 @@ function queryUserHoliday() {
 }
 function updateHolidayStatusForSingleUser(id) {
       $.ajax({
-        'url': 'http://10.10.40.138:8080/holidayadmin/' + id,
+        'url': 'http://192.168.0.102:8080/holidayadmin/' + id,
         'method': 'PUT',
         success: function() {
         queryUserHoliday();
@@ -246,12 +247,12 @@ function updateHolidayStatusForSingleUser(id) {
 
 function downloadUserHoliday() {
     let dropdownyear = $('#select_year_dropdown').val();
-    let url = 'http://10.10.40.138:8080/holiday/' + userid + "/" + dropdownyear;
+    let url = 'http://192.168.0.102:8080/holiday/' + user + "/" + dropdownyear;
     window.open(url);
     }
 
 function exportAllHolidays() {
-    let url = 'http://10.10.40.138:8080/holiday/exportall';
+    let url = 'http://192.168.0.102:8080/holiday/exportall';
     window.open(url);
     }
 </script>

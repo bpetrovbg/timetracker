@@ -124,20 +124,21 @@
     </div>
 
     <script>
-    let currentuserid = [[${session.currentuser.getId()}]];
+    let currentuser = [[${session.currentuser.getId()}]];
     
     function queryUserHistory() {
       let dropdownmonth = $('#select_month_dropdown').val();
       let dropdownyear = $('#select_year_dropdown').val();
       $("#worktime > tbody").empty();
       $.ajax({
-              'url': 'http://10.10.40.138:8080/history',
+              'url': 'http://192.168.0.102:8080/history',
               'method': 'POST',
               'dataType': 'json',
+          'withCredentials':true,
               processData: false,
               'contentType': 'application/json',
               'data': JSON.stringify({
-              "userid": currentuserid,
+              "user": currentuser,
               "month":dropdownmonth,
               "year":dropdownyear
               }),
@@ -156,7 +157,7 @@
                    '<td id="pauses">' + data[i].pausetime + '</td>' +
                    '<td id="overtime">' + data[i].overtime + '</td>' +
                    '<td id="total">' + data[i].totaltime +
-                   '<td id="project">' + data[i].projectid.name + ", " + data[i].projectid.location + " / clocked-in from: " + data[i].location +
+                   '<td id="project">' + data[i].project.name + ", " + data[i].project.location + " / clocked-in from: " + data[i].location +
                    '<td id="comment">' + data[i].comment +
                    '</td></tr>');
                     }

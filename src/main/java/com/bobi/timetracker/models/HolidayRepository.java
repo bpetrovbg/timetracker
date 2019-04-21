@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface HolidayRepository extends CrudRepository<Holiday, Integer> {
-    List<Holiday> findHolidaysByUserid(User userid);
+    List<Holiday> findHolidaysByUser(User user);
     Holiday findHolidayById(Integer holidayid);
 }

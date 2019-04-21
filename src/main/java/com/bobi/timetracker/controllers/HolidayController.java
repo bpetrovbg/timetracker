@@ -29,16 +29,16 @@ public class HolidayController {
     public ModelAndView getHolidayPage(HttpSession session) {
         if (session.getAttribute("currentuser") != null) {
             ModelAndView modelAndView = new ModelAndView("holiday");
-            List<Holiday> holidaysList = holidayRepository.findHolidaysByUserid((User) session.getAttribute("currentuser"));
+            List<Holiday> holidaysList = holidayRepository.findHolidaysByUser((User) session.getAttribute("currentuser"));
             modelAndView.addObject("holidaysList", holidaysList);
             return modelAndView;
         } else return null;
     }
 
-    @GetMapping(value = "/holiday/{userid}")
-    public List<Holiday> getUserHolidays(@PathVariable("userid") int userid) {
+    @GetMapping(value = "/holiday/{user}")
+    public List<Holiday> getUserHolidays(@PathVariable("user") int userid) {
         User user = userRepository.findUserById(userid);
-        List<Holiday> holidayList = holidayRepository.findHolidaysByUserid(user);
+        List<Holiday> holidayList = holidayRepository.findHolidaysByUser(user);
         return holidayList;
     }
 
@@ -51,7 +51,7 @@ public class HolidayController {
     @PostMapping(value = "holiday/add", consumes = "application/json", produces = "application/json")
     public Holiday addUserHoliday(@RequestBody Holiday newHoliday, HttpSession session) {
         if (session.getAttribute("currentuser") != null) {
-            if (newHoliday.getUserid() != null && !newHoliday.getDescription().trim().equals("") && newHoliday.getStartdate() != null && newHoliday.getEnddate() != null) {
+            if (newHoliday.getUser() != null && !newHoliday.getDescription().trim().equals("") && newHoliday.getStartdate() != null && newHoliday.getEnddate() != null) {
                 newHoliday.setApproved(false);
                 holidayRepository.save(newHoliday);
                 return newHoliday;
@@ -76,7 +76,7 @@ public class HolidayController {
         return null;
     }
 
-    @PutMapping (value="holidayadmin/{holidayid}")
+    @PutMapping(value = "holidayadmin/{holidayid}")
     public Holiday changeHolidayStatus(@PathVariable("holidayid") int holidayid, HttpSession session) {
         if (isAdminService.isAdmin(session)) {
             Holiday holiday = holidayRepository.findHolidayById(holidayid);
@@ -93,12 +93,12 @@ public class HolidayController {
         return new ModelAndView(new ExcelViewHolidays(), "holidays", allHolidaysList);
     }
 
-    @GetMapping(value = "/holiday/{userid}/{year}")
-    public ModelAndView exportSingleUserHolidays(@PathVariable("userid") int userid,
-                                                @PathVariable("year") int year, HttpSession session) throws JSONException {
+    @GetMapping(value = "/holiday/{user}/{year}")
+    public ModelAndView exportSingleUserHolidays(@PathVariable("user") int user,
+                                                 @PathVariable("year") int year, HttpSession session) throws JSONException {
 
         JSONObject inputJSON = new JSONObject();
-        inputJSON.put("userid", userid);
+        inputJSON.put("user", user);
         inputJSON.put("year", year);
         List<Holiday> holidayList = getUserHolidays(inputJSON.toString());
         return new ModelAndView(new ExcelViewHolidays(), "holidays", holidayList);
@@ -107,13 +107,13 @@ public class HolidayController {
 
     private List<Holiday> getUserHolidays(String jsonString) throws JSONException {
         JSONObject inputJSON = new JSONObject(jsonString);
-        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("userid").toString()));
-        List<Holiday> userHolidaysList= holidayRepository.findHolidaysByUserid(currentUser);
+        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("user").toString()));
+        List<Holiday> userHolidaysList = holidayRepository.findHolidaysByUser(currentUser);
         List<Holiday> allQueries = new ArrayList<>();
 
         for (Holiday holiday : userHolidaysList) {
             String[] singleHolidayElements = holiday.getStartdate().split("/");
-                if (singleHolidayElements[2].equals(inputJSON.getString("year"))) {
+            if (singleHolidayElements[2].equals(inputJSON.getString("year"))) {
                 allQueries.add(holiday);
             }
         }

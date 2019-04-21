@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
-//@CrossOrigin(origins = "http://10.10.40.138:8080", maxAge = 3600)
+//@CrossOrigin(origins = "http://192.168.0.102:8080", maxAge = 3600)
 @RestController
 public class ProjectController {
     private final ProjectRepository projectRepository;
@@ -25,9 +25,12 @@ public class ProjectController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/projects/add", consumes = "application/json", produces = "application/json")
-    Project addProject(@RequestBody Project newProject) {
-        projectRepository.save(newProject);
-        return newProject;
+    ModelAndView addProject(@RequestBody Project newProject, HttpSession session) {
+        if(checkIsAdminService.isAdmin(session)) {
+            projectRepository.save(newProject);
+            return new ModelAndView("/projects");
+        }
+        return null;
     }
 
     @RequestMapping(value = "/projects/remove/{id}", method = RequestMethod.DELETE)

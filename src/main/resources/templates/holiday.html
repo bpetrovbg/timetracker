@@ -153,7 +153,7 @@
 <script>
   var startdate;
   var enddate;
-  var currentuserid = [[${session.currentuser.getId()}]];
+  var currentuser = [[${session.currentuser.getId()}]];
 
   $(document).ready(function () {
       $(document).on('focus', '#startdate', function () {
@@ -181,16 +181,17 @@
 
   function addHoliday() {
     $.ajax({
-              'url': 'http://10.10.40.138:8080/holiday/add',
+              'url': 'http://192.168.0.102:8080/holiday/add',
               'method': 'POST',
               'dataType': 'json',
+        'withCredentials':true,
               processData: false,
               'contentType': 'application/json',
               'data': JSON.stringify({
               "description": $("#descriptioninput").val(),
               "startdate": startdate,
               "enddate": enddate,
-              "userid": currentuserid
+              "user": currentuser
               })});
   }
 </script>

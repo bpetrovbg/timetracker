@@ -22,7 +22,7 @@ public class User {
     private String email;
 
     @OneToOne
-    private Role userrole;
+    private Role role;
 
     public User() {
     }
@@ -32,11 +32,11 @@ public class User {
     }
 
     public Role getUserrole() {
-        return userrole;
+        return role;
     }
 
-    public void setUserrole(Role userrole) {
-        this.userrole = userrole;
+    public void setUserrole(Role role) {
+        this.role = role;
     }
 
     public Integer getId() {

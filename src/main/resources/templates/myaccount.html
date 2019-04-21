@@ -90,9 +90,10 @@ function updateEmail() {
   let mail = $('#inputEmail').val();
   console.log(mail)
   $.ajax({
-    'url': 'http://10.10.40.138:8080/myaccount/mail',
+    'url': 'http://192.168.0.102:8080/myaccount/mail',
     'method': 'POST',
     'dataType': 'text',
+      'withCredentials':true,
     processData: false,
     'contentType': 'application/json',
     'data': JSON.stringify({
@@ -110,9 +111,10 @@ function updateEmail() {
 
     if(password === passwordConfirm) {
         $.ajax({
-            'url': 'http://10.10.40.138:8080/myaccount/changepassword',
+            'url': 'http://192.168.0.102:8080/myaccount/changepassword',
             'method': 'POST',
             'dataType': 'text',
+            'withCredentials':true,
             processData: false,
             'contentType': 'application/json',
             'data': JSON.stringify({

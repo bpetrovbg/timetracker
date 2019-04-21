@@ -17,7 +17,7 @@ public class ExcelViewHolidays extends ExcelView {
                                       HttpServletRequest request,
                                       HttpServletResponse response) throws Exception {
         // change the file name
-        response.setHeader("Content-Disposition", "attachment; filename=\"reportAllHolidays.xlsx\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"reportAllHolidays.xls\"");
 
         @SuppressWarnings("unchecked")
         List<Holiday> holidayList = (List<Holiday>) model.get("holidays");
@@ -41,7 +41,7 @@ public class ExcelViewHolidays extends ExcelView {
         int rowCount = 1;
         for (Holiday holiday : holidayList ) {
             Row userProjectTimeRow = sheet.createRow(rowCount++);
-            userProjectTimeRow.createCell(0).setCellValue(holiday.getUserid().getUsername());
+            userProjectTimeRow.createCell(0).setCellValue(holiday.getUser().getUsername());
             userProjectTimeRow.createCell(1).setCellValue(holiday.getStartdate());
             userProjectTimeRow.createCell(2).setCellValue(holiday.getEnddate());
             userProjectTimeRow.createCell(3).setCellValue(holiday.getDescription());

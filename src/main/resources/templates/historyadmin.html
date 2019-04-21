@@ -128,13 +128,13 @@
         </div>
 
     <script>
-    var userid;
+    var user;
 
         //config dropdown menus
         let userDropdown = $('#select_user_dropdown');
         userDropdown.prop('selectedIndex', 0);
 
-        const urlUsers = 'http://10.10.40.138:8080/users/all';
+        const urlUsers = 'http://192.168.0.102:8080/users/all';
             $.getJSON(urlUsers, function (data) {
                 console.log(data);
                 $.each(data, function (key, user) {
@@ -143,8 +143,8 @@
             });
 
             $(document).on("change", "#select_user_dropdown", function() {
-                    userid = ($(this).find("option:selected").val())
-                    console.log(userid);
+                    user = ($(this).find("option:selected").val())
+                    console.log(user);
                 });
 
             function queryUserHistory() {
@@ -152,13 +152,14 @@
               let dropdownyear = $('#select_year_dropdown').val();
               $("#worktime > tbody").empty();
               $.ajax({
-               'url': 'http://10.10.40.138:8080/historyadmin',
+               'url': 'http://192.168.0.102:8080/historyadmin',
                'method': 'POST',
                'dataType': 'json',
+                  'withCredentials':true,
                processData: false,
                'contentType': 'application/json',
                'data': JSON.stringify({
-                "userid": userid,
+                "user": user,
                 "month":dropdownmonth,
                 "year":dropdownyear
                 }),
@@ -176,7 +177,7 @@
                                              '<td id="pauses">' + data[i].pausetime + '</td>' +
                                              '<td id="overtime">' + data[i].overtime + '</td>' +
                                              '<td id="total">' + data[i].totaltime +
-                                             '<td id="project">' + data[i].projectid.name + ", " + data[i].projectid.location + " / clocked-in from: " + data[i].location +
+                                             '<td id="project">' + data[i].project.name + ", " + data[i].project.location + " / clocked-in from: " + data[i].location +
                                              '<td id="comment">' + data[i].comment +
                                              '</td></tr>');
                                               }
@@ -187,12 +188,12 @@
             function downloadUserHistory() {
                 let dropdownmonth = $('#select_month_dropdown').val();
                 let dropdownyear = $('#select_year_dropdown').val();
-                let url = 'http://10.10.40.138:8080/history/' + userid + "/"+ dropdownmonth + "/" + dropdownyear;
+                let url = 'http://192.168.0.102:8080/history/' + user + "/"+ dropdownmonth + "/" + dropdownyear;
                 window.open(url);
             }
 
             function exportAllHistory() {
-               let url = 'http://10.10.40.138:8080/history/exportall';
+               let url = 'http://192.168.0.102:8080/history/exportall';
                window.open(url);
             }
 </script>

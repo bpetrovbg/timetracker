@@ -22,7 +22,7 @@ public class Holiday {
     private Boolean isApproved;
 
     @ManyToOne
-    private User userid;
+    private User user;
 
     public Holiday() {}
 
@@ -58,12 +58,12 @@ public class Holiday {
         this.enddate = enddate;
     }
 
-    public User getUserid() {
-        return userid;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserid(User userid) {
-        this.userid = userid;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Boolean getApproved() {

@@ -1,11 +1,9 @@
 package com.bobi.timetracker.controllers;
 
-import com.bobi.timetracker.models.UserProjectTime;
-import com.bobi.timetracker.models.UserProjectTimeRepository;
-import com.bobi.timetracker.services.GetUserProjectTimeService;
-import com.bobi.timetracker.utilities.ExcelView;
+import com.bobi.timetracker.models.Record;
+import com.bobi.timetracker.models.RecordRepository;
+import com.bobi.timetracker.services.GetRecordService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -17,76 +15,76 @@ import java.util.List;
 
 @RestController
 public class TimerController {
-    private final UserProjectTimeRepository userProjectTimeRepository;
-    private final GetUserProjectTimeService getUserProjectTimeService;
+    private final RecordRepository recordRepository;
+    private final GetRecordService getRecordService;
 
-    public TimerController(UserProjectTimeRepository userProjectTimeRepository, GetUserProjectTimeService getUserProjectTimeService) {
-        this.userProjectTimeRepository = userProjectTimeRepository;
-        this.getUserProjectTimeService = getUserProjectTimeService;
+    public TimerController(RecordRepository recordRepository, GetRecordService getRecordService) {
+        this.recordRepository = recordRepository;
+        this.getRecordService = getRecordService;
     }
 
     @PostMapping(value = "/timer/start", consumes = "application/json")
-    public void saveStartTime(@RequestBody UserProjectTime userProjectTime) {
-        List<UserProjectTime> userProjectTimeFromDBList = userProjectTimeRepository.findByUseridAndProjectid(userProjectTime.getUserid(), userProjectTime.getProjectid());
+    public void saveStartTime(@RequestBody Record record) {
+        List<Record> recordFromDBList = recordRepository.findByUserAndProject(record.getUser(), record.getProject());
         boolean queryExists = false;
 
-        if (userProjectTimeFromDBList.size() > 0) {
+        if (recordFromDBList.size() > 0) {
             LocalDateTime currentDate = new Timestamp(System.currentTimeMillis()).toLocalDateTime();
-            for (UserProjectTime userProjectTimeFromDB : userProjectTimeFromDBList) {
-                if (userProjectTimeFromDB.getStarttime().toLocalDateTime().getDayOfMonth() == currentDate.getDayOfMonth()
-                        && userProjectTimeFromDB.getStarttime().toLocalDateTime().getMonthValue() == currentDate.getMonthValue()
-                        && userProjectTimeFromDB.getStarttime().toLocalDateTime().getYear() == currentDate.getYear()) {
+            for (Record recordFromDB : recordFromDBList) {
+                if (recordFromDB.getStarttime().toLocalDateTime().getDayOfMonth() == currentDate.getDayOfMonth()
+                        && recordFromDB.getStarttime().toLocalDateTime().getMonthValue() == currentDate.getMonthValue()
+                        && recordFromDB.getStarttime().toLocalDateTime().getYear() == currentDate.getYear()) {
                     queryExists = true;
                 }
             }
         }
         if (!queryExists) {
-            userProjectTimeRepository.save(userProjectTime);
+            recordRepository.save(record);
         }
     }
 
     @PostMapping(value = "/timer/newstart", consumes = "application/json")
-    public UserProjectTime getUserProjectTime(@RequestBody UserProjectTime userProjectTime) {
-        return getUserProjectTimeService.getUserByUseridAndProjectidAndStarttime(userProjectTime.getUserid(),
-                userProjectTime.getProjectid(), userProjectTime.getStarttime());
+    public Record getUserProjectTime(@RequestBody Record record) {
+        return getRecordService.getUserByuserAndprojectAndStarttime(record.getUser(),
+                record.getProject(), record.getStarttime());
     }
 
-        /*for (UserProjectTime userProjectTimeFromDB:userProjectTimeFromDBList) {
+        /*for (Record userProjectTimeFromDB:userProjectTimeFromDBList) {
             if(userProjectTimeFromDB == null) {
-                userProjectTimeRepository.save(userProjectTime);
+                recordRepository.save(userProjectTime);
             } else if (!toDate(userProjectTimeFromDB.getStarttime().getTime()).equals(toDate(userProjectTime.getStarttime().getTime()))) {
-                userProjectTimeRepository.save(userProjectTime);
+                recordRepository.save(userProjectTime);
             } else {
                 //do nothing
             }
         }*/
 
     @PutMapping(value = "/timer/stop", consumes = "application/json")
-    public UserProjectTime saveStopTime(@RequestBody UserProjectTime userProjectTime) {
-        //UserProjectTime userProjectTimeFromDB = userProjectTimeRepository.findByUseridAndProjectid(userProjectTime.getUserid(), userProjectTime.getProjectid());
-        UserProjectTime userProjectTimeFromDB = userProjectTimeRepository.findByUseridAndProjectidAndStarttime(
-                userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
+    public Record saveStopTime(@RequestBody Record record) {
+        //Record recordFromDB = recordRepository.findByuserAndproject(record.getuser(), record.getproject());
+        Record recordFromDB = recordRepository.findByUserAndProjectAndStarttime(
+                record.getUser(), record.getProject(), record.getStarttime()
         );
-        if (userProjectTimeFromDB == null) {
+        if (recordFromDB == null) {
             //not started => do nothing
-            //userProjectTimeRepository.save(userProjectTime);
-        } else if (userProjectTimeFromDB.getEndtime() == null) {
+            //recordRepository.save(record);
+        } else if (recordFromDB.getEndtime() == null) {
             long totalWorkingtime, overtime;
-            userProjectTimeFromDB.setEndtime(userProjectTime.getEndtime());
-            totalWorkingtime = compareTwoTimeStamps(userProjectTimeFromDB.getEndtime(), userProjectTimeFromDB.getStarttime());
+            recordFromDB.setEndtime(record.getEndtime());
+            totalWorkingtime = compareTwoTimeStamps(recordFromDB.getEndtime(), recordFromDB.getStarttime());
 
-            if (userProjectTimeFromDB.getPausetime() != null) {
-                totalWorkingtime = totalWorkingtime - userProjectTimeFromDB.getPausetime();
+            if (recordFromDB.getPausetime() != null) {
+                totalWorkingtime = totalWorkingtime - recordFromDB.getPausetime();
             }
             if (totalWorkingtime > 480) {
                 overtime = totalWorkingtime - 480;
-                userProjectTimeFromDB.setOvertime(overtime);
+                recordFromDB.setOvertime(overtime);
             } else {
-                userProjectTimeFromDB.setOvertime((long) 0);
+                recordFromDB.setOvertime((long) 0);
             }
-            userProjectTimeFromDB.setTotaltime(totalWorkingtime);
-            userProjectTimeRepository.save(userProjectTimeFromDB);
-            return userProjectTimeFromDB;
+            recordFromDB.setTotaltime(totalWorkingtime);
+            recordRepository.save(recordFromDB);
+            return recordFromDB;
 
         } else {
             //do nothing => veche e prikluchil za denq...
@@ -95,45 +93,45 @@ public class TimerController {
     }
 
     @PutMapping(value = "/timer/oldpause", consumes = "application/json")
-    public void savePauseTime(@RequestBody UserProjectTime userProjectTime) {
-        UserProjectTime userProjectTimeFromDB = userProjectTimeRepository.findByUseridAndProjectidAndStarttime(
-                userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
+    public void savePauseTime(@RequestBody Record record) {
+        Record recordFromDB = recordRepository.findByUserAndProjectAndStarttime(
+                record.getUser(), record.getProject(), record.getStarttime()
         );
-        if (userProjectTimeFromDB == null) {
+        if (recordFromDB == null) {
             //not started => do nothing
         } else {
-            userProjectTimeFromDB.setOldpausetime(userProjectTime.getOldpausetime());
-            userProjectTimeRepository.save(userProjectTimeFromDB);
+            recordFromDB.setOldpausetime(record.getOldpausetime());
+            recordRepository.save(recordFromDB);
         }
     }
 
     @PutMapping(value = "/timer/newpause", consumes = "application/json")
-    public UserProjectTime saveOldPauseTime(@RequestBody UserProjectTime userProjectTime) {
-        UserProjectTime userProjectTimeFromDB = getUserProjectTimeService.getUserByUseridAndProjectidAndStarttime(
-                userProjectTime.getUserid(), userProjectTime.getProjectid(), userProjectTime.getStarttime()
+    public Record saveOldPauseTime(@RequestBody Record record) {
+        Record recordFromDB = getRecordService.getUserByuserAndprojectAndStarttime(
+                record.getUser(), record.getProject(), record.getStarttime()
         );
-        if (userProjectTimeFromDB == null) {
+        if (recordFromDB == null) {
             //doesnt exist => do nothing
-        } else if (userProjectTimeFromDB.getOldpausetime() != null) {
-            userProjectTimeFromDB.setNewpausetime(userProjectTime.getNewpausetime());
-            if (userProjectTimeFromDB.getPausetime() == null) {
+        } else if (recordFromDB.getOldpausetime() != null) {
+            recordFromDB.setNewpausetime(record.getNewpausetime());
+            if (recordFromDB.getPausetime() == null) {
                 long tempPauseTimeInMinutes;
-                tempPauseTimeInMinutes = compareTwoTimeStamps(userProjectTimeFromDB.getNewpausetime(), userProjectTimeFromDB.getOldpausetime());
-                userProjectTimeFromDB.setPausetime(tempPauseTimeInMinutes);
-                userProjectTimeRepository.save(userProjectTimeFromDB);
+                tempPauseTimeInMinutes = compareTwoTimeStamps(recordFromDB.getNewpausetime(), recordFromDB.getOldpausetime());
+                recordFromDB.setPausetime(tempPauseTimeInMinutes);
+                recordRepository.save(recordFromDB);
             } else {
-                long tempPauseTimeInMinutes = userProjectTimeFromDB.getPausetime();
-                tempPauseTimeInMinutes += compareTwoTimeStamps(userProjectTimeFromDB.getNewpausetime(), userProjectTimeFromDB.getOldpausetime());
-                userProjectTimeFromDB.setPausetime(tempPauseTimeInMinutes);
-                userProjectTimeRepository.save(userProjectTimeFromDB);
+                long tempPauseTimeInMinutes = recordFromDB.getPausetime();
+                tempPauseTimeInMinutes += compareTwoTimeStamps(recordFromDB.getNewpausetime(), recordFromDB.getOldpausetime());
+                recordFromDB.setPausetime(tempPauseTimeInMinutes);
+                recordRepository.save(recordFromDB);
             }
         }
-        return userProjectTimeFromDB;
+        return recordFromDB;
     }
 
     @GetMapping(value = "/timer/all")
-    public List<UserProjectTime> getAllTimers() {
-        return (List<UserProjectTime>) userProjectTimeRepository.findAll();
+    public List<Record> getAllTimers() {
+        return (List<Record>) recordRepository.findAll();
     }
 
     private String toDate(long timestamp) {

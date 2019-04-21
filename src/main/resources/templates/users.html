@@ -103,8 +103,8 @@
 
 
     <script>
-    var userid;
-    var roleid;
+    var user;
+    var role;
 
     //config dropdown menus
     let userDropdown = $('#select_user_dropdown');
@@ -112,7 +112,7 @@
     let rolesDropdown = $('#select_role_dropdown');
     rolesDropdown.prop('selectedIndex', 0);
 
-    const urlUsers = 'http://10.10.40.138:8080/users/all';
+    const urlUsers = 'http://192.168.0.102:8080/users/all';
         $.getJSON(urlUsers, function (data) {
             console.log(data);
             $.each(data, function (key, user) {
@@ -121,11 +121,11 @@
         });
 
         $(document).on("change", "#select_user_dropdown", function() {
-                userid = ($(this).find("option:selected").val())
-                console.log(userid);
+                user = ($(this).find("option:selected").val())
+                console.log(user);
             });
 
-    const urlRoles = 'http://10.10.40.138:8080/roles/all';
+    const urlRoles = 'http://192.168.0.102:8080/roles/all';
         $.getJSON(urlRoles, function (data) {
             console.log(data);
             $.each(data, function (key, role) {
@@ -134,12 +134,12 @@
         });
 
         $(document).on("change", "#select_role_dropdown", function() {
-                        roleid = ($(this).find("option:selected").val())
-                        console.log(roleid);
+                        role = ($(this).find("option:selected").val())
+                        console.log(role);
                     });
 
         $.ajax({
-                'url': 'http://10.10.40.138:8080/users/all',
+                'url': 'http://192.168.0.102:8080/users/all',
                 'method': 'GET',
                 'dataType': 'json',
                 processData: false,
@@ -159,8 +159,9 @@
 
         function updateUserRole() {
             $.ajax({
-            'url': 'http://10.10.40.138:8080/users/' + userid + "/" + "roles/" + roleid,
+            'url': 'http://192.168.0.102:8080/users/' + user + "/" + "roles/" + role,
             'method': 'PUT',
+                'withCredentials':true,
             success: function(data) {
               location.reload();
             }

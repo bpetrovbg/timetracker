@@ -1,6 +1,6 @@
 package com.bobi.timetracker.utilities;
 
-import com.bobi.timetracker.models.UserProjectTime;
+import com.bobi.timetracker.models.Record;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.web.servlet.view.document.AbstractXlsView;
 
@@ -18,10 +18,10 @@ public class ExcelView extends AbstractXlsView {
                                       HttpServletResponse response) throws Exception {
 
         // change the file name
-        response.setHeader("Content-Disposition", "attachment; filename=\"reportAll.xlsx\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"reportAll.xls\"");
 
         @SuppressWarnings("unchecked")
-        List<UserProjectTime> userProjectTimeList = (List<UserProjectTime>) model.get("userprojecttime");
+        List<Record> recordList = (List<Record>) model.get("userprojecttime");
 
         // create excel xls sheet
         Sheet sheet = workbook.createSheet("All data");
@@ -48,17 +48,17 @@ public class ExcelView extends AbstractXlsView {
         header.createCell(8).setCellValue("Comment");
 
         int rowCount = 1;
-        for (UserProjectTime userProjectTime : userProjectTimeList) {
+        for (Record record : recordList) {
             Row userProjectTimeRow = sheet.createRow(rowCount++);
-            userProjectTimeRow.createCell(0).setCellValue(userProjectTime.getUserid().getUsername());
-            userProjectTimeRow.createCell(1).setCellValue(userProjectTime.getProjectid().getName());
-            userProjectTimeRow.createCell(2).setCellValue(userProjectTime.getProjectid().getLocation() + " / " + userProjectTime.getLocation());
-            userProjectTimeRow.createCell(3).setCellValue(String.valueOf(userProjectTime.getStarttime()));
-            userProjectTimeRow.createCell(4).setCellValue(String.valueOf(userProjectTime.getEndtime()));
-            userProjectTimeRow.createCell(5).setCellValue(String.valueOf(userProjectTime.getPausetime()));
-            userProjectTimeRow.createCell(6).setCellValue(String.valueOf(userProjectTime.getOvertime()));
-            userProjectTimeRow.createCell(7).setCellValue(String.valueOf(userProjectTime.getTotaltime()));
-            userProjectTimeRow.createCell(8).setCellValue(userProjectTime.getComment());
+            userProjectTimeRow.createCell(0).setCellValue(record.getUser().getUsername());
+            userProjectTimeRow.createCell(1).setCellValue(record.getProject().getName());
+            userProjectTimeRow.createCell(2).setCellValue(record.getProject().getLocation() + " / " + record.getLocation());
+            userProjectTimeRow.createCell(3).setCellValue(String.valueOf(record.getStarttime()));
+            userProjectTimeRow.createCell(4).setCellValue(String.valueOf(record.getEndtime()));
+            userProjectTimeRow.createCell(5).setCellValue(String.valueOf(record.getPausetime()));
+            userProjectTimeRow.createCell(6).setCellValue(String.valueOf(record.getOvertime()));
+            userProjectTimeRow.createCell(7).setCellValue(String.valueOf(record.getTotaltime()));
+            userProjectTimeRow.createCell(8).setCellValue(record.getComment());
         }
     }
 }

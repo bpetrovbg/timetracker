@@ -4,18 +4,16 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-public class UserProjectTime {
+public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
-    //@Column(name = "userid")
-    private User userid;
+    @ManyToOne(optional = false)
+    private User user;
 
-    @ManyToOne
-    //@Column(name = "projectid")
-    private Project projectid;
+    @ManyToOne(optional = false)
+    private Project project;
 
     @Column(name = "starttime")
     private Timestamp starttime;
@@ -70,12 +68,12 @@ public class UserProjectTime {
         this.comment = comment;
     }
 
-    public Project getProjectid() {
-        return projectid;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectid(Project projectid) {
-        this.projectid = projectid;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     public Long getOvertime() {
@@ -110,12 +108,12 @@ public class UserProjectTime {
         this.id = id;
     }
 
-    public User getUserid() {
-        return userid;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserid(User userid) {
-        this.userid = userid;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Timestamp getStarttime() {
