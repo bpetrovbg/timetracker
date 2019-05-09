@@ -57,6 +57,7 @@ text-align: center;
             <li><a href="/projects">Projects</a></li>
             <li><a href="/users">Users</a></li>
             <li><a href="/holidayadmin">Holidays</a></li>
+            <li><a href="/roles">Roles</a></li>
         </ul>
     </div>
 </div>
@@ -97,7 +98,7 @@ function updateEmail() {
   let mail = $('#inputEmail').val();
   console.log(mail)
   $.ajax({
-    'url': 'http://192.168.0.102:8080/myaccount/mail',
+    'url': 'http://192.168.108.240:8080/myaccount/mail',
     'method': 'POST',
       'withCredentials': true,
     'dataType': 'text',
@@ -118,7 +119,7 @@ function updateEmail() {
 
     if(password === passwordConfirm) {
         $.ajax({
-            'url': 'http://192.168.0.102:8080/myaccount/changepassword',
+            'url': 'http://192.168.108.240:8080/myaccount/changepassword',
             'method': 'POST',
             'dataType': 'text',
             processData: false,

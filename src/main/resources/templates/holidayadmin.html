@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>OSBG TimeTracker Holidays</title>
@@ -11,87 +9,93 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-      <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <style>
         #holidaytable {
-                    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-                    border-collapse: collapse;
-                    width: 100%;
-                }
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-                #holidaytable td, #holidaytable th {
-                    border: 1px solid #ddd;
-                    padding: 8px;
-                }
+        #holidaytable td, #holidaytable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
 
-                #holidaytable tr:nth-child(even){background-color: #f2f2f2;}
-                #holidaytable tr:hover {background-color: #ddd;}
+        #holidaytable tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
-                #holidaytable th {
-                    padding-top: 8px;
-                    padding-bottom: 8px;
-                    text-align: left;
-                    background-color: #4CAF50;
-                    color: white;
-                }
+        #holidaytable tr:hover {
+            background-color: #ddd;
+        }
 
-                #div1 {
-                            position:relative;
-                            margin-top:20px;
-                            display: inline-block;
-                        }
+        #holidaytable th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
 
-                        #div2 {
-                            position:relative;
-                            margin-top:20px;
-                            display: inline-block;
-                            vertical-align:top
-                        }
+        #div1 {
+            position: relative;
+            margin-top: 20px;
+            display: inline-block;
+        }
 
-                        #div3 {
-                                width: 400px;
-                                position:relative;
-                                display: inline-block;
-                        }
-                        #div4 {
-                                position:relative;
-                                display: inline-block;
-                                vertical-align:top
-                        }
+        #div2 {
+            position: relative;
+            margin-top: 20px;
+            display: inline-block;
+            vertical-align: top
+        }
 
-                        .container-fluidcustom {
-                            background-image: url("http://outsource.bg/wp-content/uploads/2015/12/outsourcebg3web.png");
-                            background-repeat: no-repeat;
-                            background-size: contain;
-                            background-position: center;
-                            height: 50px;
-                            }
+        #div3 {
+            width: 400px;
+            position: relative;
+            display: inline-block;
+        }
 
-                            .navbar{
-                            margin-bottom: 0px !important;
-                            -webkit-border-radius: 0;
-                            -moz-border-radius: 0;
-                            border-radius: 0;
-                            }
+        #div4 {
+            position: relative;
+            display: inline-block;
+            vertical-align: top
+        }
 
-                            .navbar-nav {
-                                float:none;
-                                margin:0 auto;
-                                display: block;
-                                text-align: center;
-                            }
+        .container-fluidcustom {
+            background-image: url("http://outsource.bg/wp-content/uploads/2015/12/outsourcebg3web.png");
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            height: 50px;
+        }
 
-                            .navbar-nav > li {
-                                display: inline-block;
-                                float:none;
-                            }
+        .navbar {
+            margin-bottom: 0px !important;
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+
+        .navbar-nav {
+            float: none;
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+        }
+
+        .navbar-nav > li {
+            display: inline-block;
+            float: none;
+        }
     </style>
 </head>
 <body>
 <div class="navbar navbar-inverse">
-<div class="container-fluidcustom"></div>
+    <div class="container-fluidcustom"></div>
 </div>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
@@ -102,158 +106,208 @@
             <li><a href="/projects">Projects</a></li>
             <li><a href="/users">Users</a></li>
             <li><a href="/holidayadmin">Holidays</a></li>
+            <li><a href="/roles">Roles</a></li>
         </ul>
     </div>
-</div>
 </nav>
 
 <div class="container">
-        <div>Select:
-            <select id="select_user_dropdown">
-            <option disabled selected value> -- select a user -- </option>
-            </select>
-                <select id="select_year_dropdown">
-                                <option value="2019">2019</option>
-                                <option value="2020">2020</option>
-                                <option value="2021">2021</option>
-                                <option value="2022">2022</option>
-                                <option value="2023">2023</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
-                                </select>
+    <div>Select:
+        <select id="select_user_dropdown">
+            <option disabled selected value> -- select a user --</option>
+        </select>
+        <select id="select_year_dropdown">
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+        </select>
 
         <button onclick="queryUserHoliday()">Refresh</button>
         <button onclick="downloadUserHoliday()">Export</button>
         <button onclick="exportAllHolidays()">Export all</button>
-        </div>
     </div>
+</div>
 
-    <div>
-        <table id="holidaytable">
-            <thead>
-                <th>User</th>
-                <th>Start date</th>
-                <th>End date</th>
-                <th>Description</th>
-                <th>Is approved?</th>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+<div>
+    <table id="holidaytable">
+        <thead>
+        <th>User</th>
+        <th>Start date</th>
+        <th>End date</th>
+        <th>Description</th>
+        <th>Is approved?</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
 
-    <div class="container-fluid">
+<div class="container-fluid">
     <form>
-      <div id="div1">
-              <p>Start date: <input type="text" id="startdate" required></p>
-              </div>
-              <div id="div2">
-              <p>End date: <input type="text" id="enddate" required></p>
-              </div>
-              <div class="container-fluid">
-              <div id="div3">
-              <input type="text" class="form-control" id="descriptioninput" placeholder="Description" required>
-              </div>
-              <div id="div4">
-              <button type="submit" class="btn btn-primary" onclick="addHoliday();">ADD</button>
-              </div>
-          </div>
+        <div id="div1">
+            <p>Start date: <input type="text" id="holidaystartdate" required></p>
+        </div>
+        <div id="div2">
+            <p>End date: <input type="text" id="holidayenddate" required></p>
+        </div>
+        <div class="container-fluid">
+            <div id="div3">
+                <input type="text" class="form-control" id="descriptioninput" placeholder="Description" required>
+            </div>
+            <div id="div4">
+                <button type="submit" class="btn btn-primary" onclick="addHoliday();">ADD</button>
+            </div>
+        </div>
     </form>
 </div>
 
 <script>
-  //config dropdown menus
-          let userDropdown = $('#select_user_dropdown');
-          userDropdown.prop('selectedIndex', 0);
+    //config dropdown menus
+    let userDropdown = $('#select_user_dropdown');
+    userDropdown.prop('selectedIndex', 0);
 
-          const urlUsers = 'http://192.168.0.102:8080/users/all';
-              $.getJSON(urlUsers, function (data) {
-                  //console.log(data);
-                  $.each(data, function (key, user) {
-                      userDropdown.append($('<option></option>').attr('value', user.id).text(user.username));
-                  })
-              });
-//$("#worktime > tbody").empty();
-          $.ajax({
-            'url': 'http://192.168.0.102:8080/holiday/all',
-            'method': 'GET',
-            'dataType': 'json',
-            processData: false,
-            'contentType': 'application/json',
-            success: function(data) {
-            console.log(data);
-            for(var i in data) {
-            $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].user.username + '</td>+' +
-            '<td id="startdate">' + data[i].startdate + '</td>' +
-            '<td id="enddate">' + data[i].enddate + '</td>' +
-            '<td id="description">' + data[i].description + '</td>' +
-            '<td id="isapproved">' + '<button id="updatebtn" onclick="updateHolidayStatus(' + data[i].id + ")\">" + data[i].approved +
-            '</button></td></tr>');
-            }
-            }
-            });
-</script>
-
-<script>
-function updateHolidayStatus(id) {
-    $.ajax({
-        'url': 'http://192.168.0.102:8080/holidayadmin/' + id,
-        'method': 'PUT',
-        success: function() {
-          location.reload();
-        }
-})};
-</script>
-<script>
-var user;
-$(document).on("change", "#select_user_dropdown", function() {
-    user = ($(this).find("option:selected").val())
-    console.log(user);
+    const urlUsers = 'http://192.168.108.240:8080/users/all';
+    $.getJSON(urlUsers, function (data) {
+        //console.log(data);
+        $.each(data, function (key, user) {
+            userDropdown.append($('<option></option>').attr('value', user.id).text(user.username));
+        })
     });
-function queryUserHoliday() {
-  let dropdownuser = $('#select_user_dropdown').val();
-  let dropdownyear = $('#select_year_dropdown').val();
+
     $.ajax({
-        'url': 'http://192.168.0.102:8080/holidayadmin',
-        'method': 'POST',
-        'withCredentials':true,
+        'url': 'http://192.168.108.240:8080/holiday/all',
+        'method': 'GET',
         'dataType': 'json',
         processData: false,
         'contentType': 'application/json',
-        'data': JSON.stringify({
-            "user": user,
-            "year":dropdownyear
+        success: function (data) {
+            console.log(data);
+            for (var i in data) {
+                $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].user.username + '</td>+' +
+                    '<td id="startdate">' + data[i].startdate + '</td>' +
+                    '<td id="enddate">' + data[i].enddate + '</td>' +
+                    '<td id="description">' + data[i].description + '</td>' +
+                    '<td id="isapproved">' + '<button id="updatebtn" onclick="updateHolidayStatus(' + data[i].id + ")\">" + data[i].approved +
+                    '</button></td></tr>');
+            }
+        }
+    });
+</script>
+
+<script>
+    function updateHolidayStatus(id) {
+        $.ajax({
+            'url': 'http://192.168.108.240:8080/holidayadmin/' + id,
+            'method': 'PUT',
+            success: function () {
+                location.reload();
+            }
+        })
+    };
+</script>
+<script>
+    var user;
+    $(document).on("change", "#select_user_dropdown", function () {
+        user = ($(this).find("option:selected").val())
+        console.log(user);
+    });
+
+    function queryUserHoliday() {
+        let dropdownuser = $('#select_user_dropdown').val();
+        let dropdownyear = $('#select_year_dropdown').val();
+        $.ajax({
+            'url': 'http://192.168.108.240:8080/holidayadmin',
+            'method': 'POST',
+            'withCredentials': true,
+            'dataType': 'json',
+            processData: false,
+            'contentType': 'application/json',
+            'data': JSON.stringify({
+                "user": user,
+                "year": dropdownyear
             }),
-            success: function(data) {
+            success: function (data) {
                 console.log(data)
                 $("#holidaytable > tbody").empty();
-                   for(var i in data) {
+                for (var i in data) {
                     $('#holidaytable > tbody:last-child').append('<tr><td id="username">' + data[i].user.username + '</td>+' +
-                                '<td id="startdate">' + data[i].startdate + '</td>' +
-                                '<td id="enddate">' + data[i].enddate + '</td>' +
-                                '<td id="description">' + data[i].description + '</td>' +
-                                '<td id="isapproved">' + '<button id="updatebtn" onclick="updateHolidayStatusForSingleUser(' + data[i].id + ")\">" + data[i].approved +
-                                '</button></td></tr>');
-                    }
-    }});
-}
-function updateHolidayStatusForSingleUser(id) {
-      $.ajax({
-        'url': 'http://192.168.0.102:8080/holidayadmin/' + id,
-        'method': 'PUT',
-        success: function() {
-        queryUserHoliday();
-      }
-    })}
-
-function downloadUserHoliday() {
-    let dropdownyear = $('#select_year_dropdown').val();
-    let url = 'http://192.168.0.102:8080/holiday/' + user + "/" + dropdownyear;
-    window.open(url);
+                        '<td id="startdate">' + data[i].startdate + '</td>' +
+                        '<td id="enddate">' + data[i].enddate + '</td>' +
+                        '<td id="description">' + data[i].description + '</td>' +
+                        '<td id="isapproved">' + '<button id="updatebtn" onclick="updateHolidayStatusForSingleUser(' + data[i].id + ")\">" + data[i].approved +
+                        '</button></td></tr>');
+                }
+            }
+        });
     }
 
-function exportAllHolidays() {
-    let url = 'http://192.168.0.102:8080/holiday/exportall';
-    window.open(url);
+    function updateHolidayStatusForSingleUser(id) {
+        $.ajax({
+            'url': 'http://192.168.108.240:8080/holidayadmin/' + id,
+            'method': 'PUT',
+            success: function () {
+                queryUserHoliday();
+            }
+        })
+    }
+
+    function downloadUserHoliday() {
+        let dropdownyear = $('#select_year_dropdown').val();
+        let url = 'http://192.168.108.240:8080/holiday/' + user + "/" + dropdownyear;
+        window.open(url);
+    }
+
+    function exportAllHolidays() {
+        let url = 'http://192.168.108.240:8080/holiday/exportall';
+        window.open(url);
+    }
+</script>
+<script>
+    var holidaystartdate;
+    var holidayenddate;
+    var currentuser = [[${session.currentuser.getId()}]];
+
+    $(document).ready(function () {
+        $(document).on('focus', '#holidaystartdate', function () {
+            $(this).datepicker({
+                dateFormat: 'dd/mm/yy',
+                onSelect: function(dateText) {
+                    holidaystartdate = dateText;
+                    console.log("Selected start date: " + holidaystartdate + "; input's current value: " + this.value);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $(document).on('focus', '#holidayenddate', function () {
+            $(this).datepicker({
+                dateFormat: 'dd/mm/yy',
+                onSelect: function(dateText) {
+                    holidayenddate = dateText;
+                    console.log("Selected end date: " + holidayenddate + "; input's current value: " + this.value);
+                }
+            });
+        });
+    });
+
+    function addHoliday() {
+        $.ajax({
+            'url': 'http://192.168.108.240:8080/holiday/add',
+            'method': 'POST',
+            'dataType': 'json',
+            'withCredentials':true,
+            processData: false,
+            'contentType': 'application/json',
+            'data': JSON.stringify({
+                "description": $("#descriptioninput").val(),
+                "startdate": holidaystartdate,
+                "enddate": holidayenddate,
+                "user": currentuser
+            })});
     }
 </script>
 </body>

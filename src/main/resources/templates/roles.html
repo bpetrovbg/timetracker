@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OSBG TimeTracker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <style>
+        #rolestable {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #rolestable td, #rolestable th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #rolestable tr:nth-child(even){background-color: #f2f2f2;}
+        #rolestable tr:hover {background-color: #ddd;}
+
+        #rolestable th {
+            padding-top: 8px;
+            padding-bottom: 8px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* form starting stylings ------------------------------- */
+        #div1 {
+            position:relative;
+            margin-top:20px;
+            margin-bottom:45px;
+            display: inline-block;
+        }
+
+        input 				{
+            font-size:18px;
+            padding:10px 10px 10px 5px;
+            display:block;
+            width:300px;
+            border:none;
+            border-bottom:1px solid #757575;
+        }
+        input:focus 		{ outline:none; }
+
+        /* LABEL ======================================= */
+        label 				 {
+            color:#999;
+            font-size:18px;
+            font-weight:normal;
+            position:absolute;
+            pointer-events:none;
+            left:5px;
+            top:10px;
+            transition:0.2s ease all;
+            -moz-transition:0.2s ease all;
+            -webkit-transition:0.2s ease all;
+        }
+
+        /* active state */
+        input:focus ~ label, input:valid ~ label 		{
+            top:-20px;
+            font-size:14px;
+            color:#5264AE;
+        }
+
+        /* BOTTOM BARS ================================= */
+        .bar 	{ position:relative; display:block; width:300px; }
+        .bar:before, .bar:after 	{
+            content:'';
+            height:2px;
+            width:0;
+            bottom:1px;
+            position:absolute;
+            background:#5264AE;
+            transition:0.2s ease all;
+            -moz-transition:0.2s ease all;
+            -webkit-transition:0.2s ease all;
+        }
+        .bar:before {
+            left:50%;
+        }
+        .bar:after {
+            right:50%;
+        }
+
+        /* active state */
+        input:focus ~ .bar:before, input:focus ~ .bar:after {
+            width:50%;
+        }
+
+        /* HIGHLIGHTER ================================== */
+        .highlight {
+            position:absolute;
+            height:60%;
+            width:100px;
+            top:25%;
+            left:0;
+            pointer-events:none;
+            opacity:0.5;
+        }
+
+        /* active state */
+        input:focus ~ .highlight {
+            -webkit-animation:inputHighlighter 0.3s ease;
+            -moz-animation:inputHighlighter 0.3s ease;
+            animation:inputHighlighter 0.3s ease;
+        }
+
+        /* ANIMATIONS ================ */
+        @-webkit-keyframes inputHighlighter {
+            from { background:#5264AE; }
+            to 	{ width:0; background:transparent; }
+        }
+        @-moz-keyframes inputHighlighter {
+            from { background:#5264AE; }
+            to 	{ width:0; background:transparent; }
+        }
+        @keyframes inputHighlighter {
+            from { background:#5264AE; }
+            to 	{ width:0; background:transparent; }
+        }
+
+        .container-fluidcustom {
+            background-image: url("http://outsource.bg/wp-content/uploads/2015/12/outsourcebg3web.png");
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            height: 50px;
+        }
+        .navbar{
+            margin-bottom: 0px !important;
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
+        .navbar-nav {
+            float:none;
+            margin:0 auto;
+            display: block;
+            text-align: center;
+        }
+        .navbar-nav > li {
+            display: inline-block;
+            float:none;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar navbar-inverse">
+    <div class="container-fluidcustom"></div>
+</div>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li><a href="/admin">Home</a></li>
+            <li><a href="/myaccount">My account</a></li>
+            <li><a href="/historyadmin">History</a></li>
+            <li><a href="/projects">Projects</a></li>
+            <li><a href="/users">Users</a></li>
+            <li><a href="/holidayadmin">Holidays</a></li>
+            <li><a href="/roles">Roles</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container-fluid"><h4>All roles: </h4></div>
+
+<div>
+    <table id="rolestable">
+        <thead>
+        <th>ID</th>
+        <th>Name</th>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="container-fluid">
+    <form class="form-inline">
+        <div id="div1">
+            <input type="text" class="form-control" id="nameinput" placeholder="Role Name">
+        </div>
+        <span class="form-group bmd-form-group"> <!-- needed to match padding for floating labels -->
+        <button type="submit" class="btn btn-primary" onclick="addRole();">ADD</button>
+      </span>
+    </form>
+</div>
+<script>
+    $.ajax({
+        'url': 'http://192.168.108.240:8080/roles/all',
+        'method': 'GET',
+        'dataType': 'json',
+        processData: false,
+        'contentType': 'application/json',
+        success: function(data) {
+            console.log(data);
+            for(var i in data) {
+                var id = data[i].id;
+                $('#rolestable > tbody:last-child').append('<tr><td id="id">' + data[i].id + '</td>+' +
+                    '<td id="name">' + data[i].name + '</td>' +
+                    '</td></tr>');
+            }
+        }
+    });
+
+    function addRole() {
+        var rolename = $("#nameinput").val();
+        console.log(rolename);
+
+        $.ajax({
+            'url': 'http://192.168.108.240:8080/roles/add',
+            'method': 'POST',
+            'dataType': 'json',
+            'withCredentials':true,
+            processData: false,
+            'contentType': 'application/json',
+            'data': JSON.stringify({
+                "name": rolename
+            }),
+            onsuccess: function(data) {
+                console.log(data);
+                for(var i in data) {
+                    var id = data[i].id;
+                    $('#rolestable > tbody:last-child').append('<tr><td id="id">' + data[i].id + '</td>+' +
+                        '<td id="name">' + data[i].name + '</td>' +
+                        '</td></tr>');
+                }}});
+    }
+</script>
+</body>

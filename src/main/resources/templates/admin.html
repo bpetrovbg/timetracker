@@ -38,6 +38,7 @@
         .buttonstop {
             color: red;
         }
+
         .buttonstop:hover {
             color: firebrick;
         }
@@ -45,6 +46,7 @@
         .buttonstart {
             color: green;
         }
+
         .buttonstart:hover {
             color: lightgreen;
         }
@@ -71,8 +73,13 @@
             padding: 8px;
         }
 
-        #worktime tr:nth-child(even){background-color: #f2f2f2;}
-        #worktime tr:hover {background-color: #ddd;}
+        #worktime tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #worktime tr:hover {
+            background-color: #ddd;
+        }
 
         #worktime th {
             padding-top: 8px;
@@ -83,95 +90,123 @@
         }
 
         h1 {
-        text-align: center;
-        border-bottom: 3px solid black;
+            text-align: center;
+            border-bottom: 3px solid black;
         }
 
-    .container-fluidcustom {
-    background-image: url("http://outsource.bg/wp-content/uploads/2015/12/outsourcebg3web.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    height: 50px;
-    }
+        .container-fluidcustom {
+            background-image: url("http://outsource.bg/wp-content/uploads/2015/12/outsourcebg3web.png");
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+            height: 50px;
+        }
 
-    .navbar{
-    margin-bottom: 0px !important;
-    -webkit-border-radius: 0;
-    -moz-border-radius: 0;
-    border-radius: 0;
-    }
+        .navbar {
+            margin-bottom: 0px !important;
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+        }
 
-    .navbar-nav {
-        float:none;
-        margin:0 auto;
-        display: block;
-        text-align: center;
-    }
+        .navbar-nav {
+            float: none;
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+        }
 
-    .navbar-nav > li {
-        display: inline-block;
-        float:none;
-    }
+        .navbar-nav > li {
+            display: inline-block;
+            float: none;
+        }
 
-    @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px)  {
-                		/* Force table to not be like tables anymore */
-                		table, thead, tbody, th, td, tr {
-                			display: block;
-                		}
+        h3 {
+            text-align: center;
+        }
 
-                		/* Hide table headers (but not display: none;, for accessibility) */
-                		thead tr {
-                			position: absolute;
-                			top: -9999px;
-                			left: -9999px;
-                		}
+        #projectdiv {
+            text-align: center;
+        }
 
-                    tr {
-                      margin: 0 0 1rem 0;
-                    }
+        @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
+            /* Force table to not be like tables anymore */
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
 
-                    tr:nth-child(odd) {
-                      background: #ccc;
-                    }
+            /* Hide table headers (but not display: none;, for accessibility) */
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
 
-                		td {
-                			/* Behave  like a "row" */
-                			border: none;
-                			border-bottom: 1px solid #eee;
-                			position: relative;
-                			padding-left: 50%;
-                		}
+            tr {
+                margin: 0 0 1rem 0;
+            }
 
-                		td:before {
-                			/* Now like a table header */
-                			position: relative;
-                			/* Top/left values mimic padding */
-                			top: 0;
-                			left: 6px;
-                			width: 45%;
-                			padding-right: 10px;
-                			white-space: nowrap;
-                		}
+            tr:nth-child(odd) {
+                background: #ccc;
+            }
 
-                		/*
-                		Label the data
-                    You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
-                		*/
-                		td:nth-of-type(1):before { content: "Start time: "; }
-                		td:nth-of-type(2):before { content: "End time: "; }
-                		td:nth-of-type(3):before { content: "Pauses (total, minutes): "; }
-                		td:nth-of-type(4):before { content: "Overtime (minutes): "; }
-                		td:nth-of-type(5):before { content: "Total working time (minutes): "; }
-                		td:nth-of-type(6):before { content: "Location: "; }
-                		td:nth-of-type(7):before { content: "Comment: "; }
-                	}
+            td {
+                /* Behave  like a "row" */
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+            }
+
+            td:before {
+                /* Now like a table header */
+                position: relative;
+                /* Top/left values mimic padding */
+                top: 0;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+            }
+
+            /*
+            Label the data
+        You could also use a data-* attribute and content for this. That way "bloats" the HTML, this way means you need to keep HTML and CSS in sync. Lea Verou has a clever way to handle with text-shadow.
+            */
+            td:nth-of-type(1):before {
+                content: "Start time: ";
+            }
+
+            td:nth-of-type(2):before {
+                content: "End time: ";
+            }
+
+            td:nth-of-type(3):before {
+                content: "Pauses (total, minutes): ";
+            }
+
+            td:nth-of-type(4):before {
+                content: "Overtime (minutes): ";
+            }
+
+            td:nth-of-type(5):before {
+                content: "Total working time (minutes): ";
+            }
+
+            td:nth-of-type(6):before {
+                content: "Location: ";
+            }
+
+            td:nth-of-type(7):before {
+                content: "Comment: ";
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="navbar navbar-inverse">
-<div class="container-fluidcustom"></div>
+    <div class="container-fluidcustom"></div>
 </div>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
@@ -182,33 +217,34 @@
             <li><a href="/projects">Projects</a></li>
             <li><a href="/users">Users</a></li>
             <li><a href="/holidayadmin">Holidays</a></li>
+            <li><a href="/roles">Roles</a></li>
         </ul>
     </div>
-</div>
 </nav>
 
 <div class="container">
     <h1>Admin dashboard</h1>
     <h3 th:text="'Welcome again, ' + ${session.currentuser.getUsername()}" th:unless="${session == null}"></h3>
     <div id="location"></div>
-    <div>Select a project:
-             <select id="select_projects_dropdown">
-             <option disabled selected value> -- select an option -- </option>
-             </select></div>
+    <div id="projectdiv">Select a project:
+        <select id="select_projects_dropdown">
+            <option disabled selected value> -- select an option -- </option>
+        </select></div>
     <div>
-    <nav class="controls">
-        <a href="#" class="button buttonstart" onClick="stopwatch.start();">Start</a>
-        <a href="#" class="button" onClick="stopwatch.pause();">Pause</a>
-        <a href="#" class="button buttonstop" onClick="stopwatch.stop();">Stop</a>
-        <!--<a href="#" class="button" onClick="stopwatch.restart();">Restart</a>
-        <a href="#" class="button" onClick="stopwatch.clear();">Clear Laps</a>-->
-    </nav>
-    <div class="stopwatch"></div>
-    <ul class="results"></ul>
+    <div>
+        <nav class="controls">
+            <a href="#" class="button buttonstart" onClick="stopwatch.start();">Start</a>
+            <a href="#" class="button" onClick="stopwatch.pause();">Pause</a>
+            <a href="#" class="button buttonstop" onClick="stopwatch.stop();">Stop</a>
+            <!--<a href="#" class="button" onClick="stopwatch.restart();">Restart</a>
+            <a href="#" class="button" onClick="stopwatch.clear();">Clear Laps</a>-->
+        </nav>
+        <div class="stopwatch"></div>
+        <ul class="results"></ul>
     </div>
     <div>
         <table id="worktime">
-        <thead>
+            <thead>
             <tr>
                 <th>Start time</th>
                 <th>End time</th>
@@ -218,8 +254,8 @@
                 <th>Location</th>
                 <th>Comment</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr>
                 <td id="starttime"></td>
                 <td id="endtime"></td>
@@ -229,7 +265,7 @@
                 <td id="currentlocation"></td>
                 <td id="comment"></td>
             </tr>
-        </tbody>
+            </tbody>
         </table>
     </div>
 
@@ -254,7 +290,7 @@
         url: "https://geoip-db.com/jsonp",
         jsonpCallback: "callback",
         dataType: "jsonp",
-        success: function( location ) {
+        success: function (location) {
             currentlocation = location.city;
             console.log(currentlocation);
             $('#location').html("<h3> Your current location is: " + location.city + "</h3>");
@@ -266,7 +302,7 @@
     //dropdown.empty();
     dropdown.prop('selectedIndex', 0);
 
-    const url = 'http://192.168.0.102:8080/projects/all';
+    const url = 'http://192.168.108.240:8080/projects/all';
     $.getJSON(url, function (data) {
         console.log(data);
         $.each(data, function (key, project) {
@@ -275,54 +311,54 @@
     });
 
     //dropdown on change assign current project
-    $(document).on("change", "#select_projects_dropdown", function() {
-            currentprojectname = ($(this).find("option:selected").text());
-            currentproject = ($(this).find("option:selected").val());
-            console.log(currentprojectname);
-            console.log(currentproject);
-            var date = new Date();
-            isinpause = false;
-            isstart = false;
-            isstartforfirsttime = false;
-            isstopped = false;
+    $(document).on("change", "#select_projects_dropdown", function () {
+        currentprojectname = ($(this).find("option:selected").text());
+        currentproject = ($(this).find("option:selected").val());
+        console.log(currentprojectname);
+        console.log(currentproject);
+        var date = new Date();
+        isinpause = false;
+        isstart = false;
+        isstartforfirsttime = false;
+        isstopped = false;
 
-             $.ajax({
-                     'url': 'http://192.168.0.102:8080/history/' + currentuser + '/' + currentproject + '/' + date.getDate()
-                     + '/' + (date.getMonth()+1) + '/' + date.getFullYear(),
-                     'method': 'GET',
-                     'dataType': 'json',
-                     processData: false,
-                     'contentType': 'application/json',
-                     success: function(data) {
-                     console.log(data);
-                     if(data.id == null) {
-                         document.getElementById("starttime").innerHTML = '';
-                         document.getElementById("endtime").innerHTML = '';
-                         document.getElementById("pauses").innerHTML = '';
-                         document.getElementById("overtime").innerHTML = '';
-                         document.getElementById("total").innerHTML = '';
-                         document.getElementById("currentlocation").innerHTML = '';
-                         document.getElementById("comment").innerHTML = '';
-                     } else {
-                     if(data.endtime != null) {
-                         var localEndTime = new Date(data.endtime);
-                         document.getElementById("endtime").innerHTML = ("Date: " + localEndTime);
-                         isstopped = true;
-                     }
+        $.ajax({
+            'url': 'http://192.168.108.240:8080/history/' + currentuser + '/' + currentproject + '/' + date.getDate()
+                + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+            'method': 'GET',
+            'dataType': 'json',
+            processData: false,
+            'contentType': 'application/json',
+            success: function (data) {
+                console.log(data);
+                if (data.id == null) {
+                    document.getElementById("starttime").innerHTML = '';
+                    document.getElementById("endtime").innerHTML = '';
+                    document.getElementById("pauses").innerHTML = '';
+                    document.getElementById("overtime").innerHTML = '';
+                    document.getElementById("total").innerHTML = '';
+                    document.getElementById("currentlocation").innerHTML = '';
+                    document.getElementById("comment").innerHTML = '';
+                } else {
+                    if (data.endtime != null) {
+                        var localEndTime = new Date(data.endtime);
+                        document.getElementById("endtime").innerHTML = ("Date: " + localEndTime);
+                        isstopped = true;
+                    }
 
-                     document.getElementById("starttime").innerHTML = (new Date(data.starttime));
-                     document.getElementById("pauses").innerHTML = data.pausetime;
-                     document.getElementById("overtime").innerHTML = data.overtime;
-                     document.getElementById("total").innerHTML = data.totaltime;
-                     document.getElementById("currentlocation").innerHTML = data.location;
-                     document.getElementById("comment").innerHTML = data.comment;
+                    document.getElementById("starttime").innerHTML = (new Date(data.starttime));
+                    document.getElementById("pauses").innerHTML = data.pausetime;
+                    document.getElementById("overtime").innerHTML = data.overtime;
+                    document.getElementById("total").innerHTML = data.totaltime;
+                    document.getElementById("currentlocation").innerHTML = data.location;
+                    document.getElementById("comment").innerHTML = data.comment;
 
-                     isstartforfirsttime = false;
-                     isstart = false;
-                     }
+                    isstartforfirsttime = false;
+                    isstart = false;
+                }
             }
         })
-        });
+    });
 
     class Stopwatch {
         constructor(display, results) {
@@ -335,135 +371,135 @@
         }
 
         reset() {
-            this.times = [ 0, 0, 0 ];
+            this.times = [0, 0, 0];
         }
 
         start() {
-            if(isstopped == false) {
+            if (isstopped == false) {
                 if (isstartforfirsttime == false) {
-                                    if(currentprojectname == undefined) {
-                                        alert("Please select a project first!");
-                                    }
-                                    if(!currentprojectname.includes(currentlocation)) {
-                                        var comment = prompt("Location not allowed, leave your message here:");
-                                          if (comment != null && comment.trim() != "") {
-                                            console.log(comment)
-                                    if (!this.time) this.time = performance.now();
-                                    if (!this.running) {
-                                        this.running = true;
-                                        requestAnimationFrame(this.step.bind(this));
-                                        let selectedproject = $('#select_projects_dropdown').val();
-
-                                        if(starttimeglobal == undefined || starttimeglobal == null) {
-                                            starttimeglobal = Date.now();
-                                        }
-                                        $.ajax({
-                                            'url': 'http://192.168.0.102:8080/timer/start',
-                                            'method': 'POST',
-                                            'dataType': 'json',
-                                            'withCredentials':true,
-                                            processData: false,
-                                            'contentType': 'application/json',
-                                            'data': JSON.stringify({
-                                                "user": currentuser,
-                                                "project": selectedproject,
-                                                "starttime": starttimeglobal,
-                                                "location":currentlocation,
-                                                "comment":comment
-                                            })
-                                        });
-                                        if ($('#starttime').length) {
-                                            let date, datevalues;
-                                            date = new Date(starttimeglobal),
-                                                datevalues = [
-                                                    date.getFullYear(),
-                                                    date.getMonth() + 1,
-                                                    date.getDate(),
-                                                    date.getHours(),
-                                                    date.getMinutes(),
-                                                    date.getSeconds(),
-                                                ];
-                                            document.getElementById("starttime").innerHTML = ("Date: " + date);
-                                            document.getElementById("comment").innerHTML = comment;
-                                            document.getElementById("currentlocation").innerHTML = currentlocation;
-                                        }
-                                        isstartforfirsttime = true;
-                                        isstart = true;
-                                    }
-                                          }
-                                    } else {
-                                    if (!this.time) this.time = performance.now();
-                                    if (!this.running) {
-                                        this.running = true;
-                                        requestAnimationFrame(this.step.bind(this));
-                                        let selectedproject = $('#select_projects_dropdown').val();
-                                        /*let starttime = Date.now();
-                                        starttimeglobal = starttime;*/
-                                        if(starttimeglobal == undefined) {
-                                        starttimeglobal = Date.now();
-                                        }
-                                        $.ajax({
-                                            'url': 'http://192.168.0.102:8080/timer/start',
-                                            'method': 'POST',
-                                            'withCredentials':true,
-                                            'dataType': 'json',
-                                            processData: false,
-                                            'contentType': 'application/json',
-                                            'data': JSON.stringify({
-                                                "user": currentuser,
-                                                "project": selectedproject,
-                                                "starttime": starttimeglobal,
-                                                "location":currentlocation
-                                            })
-                                        });
-                                        if ($('#starttime').length) {
-                                            let date, datevalues;
-                                            date = new Date(starttimeglobal),
-                                                datevalues = [
-                                                    date.getFullYear(),
-                                                    date.getMonth() + 1,
-                                                    date.getDate(),
-                                                    date.getHours(),
-                                                    date.getMinutes(),
-                                                    date.getSeconds(),
-                                                ];
-                                            document.getElementById("starttime").innerHTML = ("Date: " + date);
-                                            document.getElementById("currentlocation").innerHTML = currentlocation;
-                                        }
-                                        isstartforfirsttime = true;
-                                        isstart = true;
-                                    }
-                                  }
-                                }   else if (isstart == false) {
+                    if (currentprojectname == undefined) {
+                        alert("Please select a project first!");
+                    }
+                    if (!currentprojectname.includes(currentlocation)) {
+                        var comment = prompt("Location not allowed, leave your message here:");
+                        if (comment != null && comment.trim() != "") {
+                            console.log(comment)
                             if (!this.time) this.time = performance.now();
                             if (!this.running) {
                                 this.running = true;
                                 requestAnimationFrame(this.step.bind(this));
+                                let selectedproject = $('#select_projects_dropdown').val();
+
+                                if (starttimeglobal == undefined || starttimeglobal == null) {
+                                    starttimeglobal = Date.now();
+                                }
+                                $.ajax({
+                                    'url': 'http://192.168.108.240:8080/timer/start',
+                                    'method': 'POST',
+                                    'dataType': 'json',
+                                    'withCredentials': true,
+                                    processData: false,
+                                    'contentType': 'application/json',
+                                    'data': JSON.stringify({
+                                        "user": currentuser,
+                                        "project": selectedproject,
+                                        "starttime": starttimeglobal,
+                                        "location": currentlocation,
+                                        "comment": comment
+                                    })
+                                });
+                                if ($('#starttime').length) {
+                                    let date, datevalues;
+                                    date = new Date(starttimeglobal),
+                                        datevalues = [
+                                            date.getFullYear(),
+                                            date.getMonth() + 1,
+                                            date.getDate(),
+                                            date.getHours(),
+                                            date.getMinutes(),
+                                            date.getSeconds(),
+                                        ];
+                                    document.getElementById("starttime").innerHTML = ("Date: " + date);
+                                    document.getElementById("comment").innerHTML = comment;
+                                    document.getElementById("currentlocation").innerHTML = currentlocation;
+                                }
+                                isstartforfirsttime = true;
+                                isstart = true;
                             }
+                        }
+                    } else {
+                        if (!this.time) this.time = performance.now();
+                        if (!this.running) {
+                            this.running = true;
+                            requestAnimationFrame(this.step.bind(this));
                             let selectedproject = $('#select_projects_dropdown').val();
-                            let pausetime = Date.now();
+                            /*let starttime = Date.now();
+                            starttimeglobal = starttime;*/
+                            if (starttimeglobal == undefined) {
+                                starttimeglobal = Date.now();
+                            }
                             $.ajax({
-                            'url': 'http://192.168.0.102:8080/timer/newpause',
-                            'method': 'PUT',
-                            'dataType': 'json',
-                            processData: false,
-                            'contentType': 'application/json',
-                            'data': JSON.stringify({
+                                'url': 'http://192.168.108.240:8080/timer/start',
+                                'method': 'POST',
+                                'withCredentials': true,
+                                'dataType': 'json',
+                                processData: false,
+                                'contentType': 'application/json',
+                                'data': JSON.stringify({
+                                    "user": currentuser,
+                                    "project": selectedproject,
+                                    "starttime": starttimeglobal,
+                                    "location": currentlocation
+                                })
+                            });
+                            if ($('#starttime').length) {
+                                let date, datevalues;
+                                date = new Date(starttimeglobal),
+                                    datevalues = [
+                                        date.getFullYear(),
+                                        date.getMonth() + 1,
+                                        date.getDate(),
+                                        date.getHours(),
+                                        date.getMinutes(),
+                                        date.getSeconds(),
+                                    ];
+                                document.getElementById("starttime").innerHTML = ("Date: " + date);
+                                document.getElementById("currentlocation").innerHTML = currentlocation;
+                            }
+                            isstartforfirsttime = true;
+                            isstart = true;
+                        }
+                    }
+                } else if (isstart == false) {
+                    if (!this.time) this.time = performance.now();
+                    if (!this.running) {
+                        this.running = true;
+                        requestAnimationFrame(this.step.bind(this));
+                    }
+                    let selectedproject = $('#select_projects_dropdown').val();
+                    let pausetime = Date.now();
+                    $.ajax({
+                        'url': 'http://192.168.108.240:8080/timer/newpause',
+                        'method': 'PUT',
+                        'dataType': 'json',
+                        processData: false,
+                        'contentType': 'application/json',
+                        'data': JSON.stringify({
                             "user": currentuser,
                             "project": selectedproject,
                             "starttime": starttimeglobal,
                             "newpausetime": pausetime
-                            }),
-                            success: function(data) {
+                        }),
+                        success: function (data) {
                             console.log(data)
                             document.getElementById("pauses").innerText = data.pausetime
-                            }
-                            });
-                        isstart = true;
-                        isinpause = false;
-                    }
+                        }
+                    });
+                    isstart = true;
+                    isinpause = false;
                 }
             }
+        }
 
         pause() {
             if (isinpause == false) {
@@ -472,7 +508,7 @@
                 let pausetime = Date.now();
 
                 $.ajax({
-                    'url': 'http://192.168.0.102:8080/timer/oldpause',
+                    'url': 'http://192.168.108.240:8080/timer/oldpause',
                     'method': 'PUT',
                     'dataType': 'json',
                     processData: false,
@@ -497,8 +533,8 @@
                             date.getSeconds(),
                         ];
                 }
-            isinpause = true;
-            isstart = false;
+                isinpause = true;
+                isstart = false;
             } else { //in pause => do nothing
             }
         }
@@ -511,39 +547,39 @@
             let endtime = Date.now();
 
             $.ajax({
-                'url':'http://192.168.0.102:8080/timer/stop',
-                'method':'PUT',
+                'url': 'http://192.168.108.240:8080/timer/stop',
+                'method': 'PUT',
                 'dataType': 'json',
                 processData: false,
                 'contentType': 'application/json',
-                'data':JSON.stringify({
-                    "user":currentuser,
-                    "project":selectedproject,
-                    "starttime":starttimeglobal,
-                    "endtime":endtime
-                }), success: function(data) {
+                'data': JSON.stringify({
+                    "user": currentuser,
+                    "project": selectedproject,
+                    "starttime": starttimeglobal,
+                    "endtime": endtime
+                }), success: function (data) {
                     console.log(data)
                     document.getElementById("overtime").innerText = data.overtime
                     document.getElementById("total").innerText = data.totaltime;
                 }
             });
 
-            if($('#endtime').length && isstopped == false) {
+            if ($('#endtime').length && isstopped == false) {
                 let date, datevalues;
                 date = new Date(endtime),
                     datevalues = [
                         date.getFullYear(),
-                        date.getMonth()+1,
+                        date.getMonth() + 1,
                         date.getDate(),
                         date.getHours(),
                         date.getMinutes(),
                         date.getSeconds(),
                     ];
-                    /*document.getElementById("endtime").innerHTML = (
-                        "Date: " + datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + "<br>" +
-                        "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);*/
-                    document.getElementById("endtime").innerHTML = ("Date: " + date);
-                    isstopped = true;
+                /*document.getElementById("endtime").innerHTML = (
+                    "Date: " + datevalues[2] + "/" + datevalues[1] + "/" + datevalues[0] + "<br>" +
+                    "Time: " + datevalues[3] + ":" + datevalues[4] + ":" + datevalues[5]);*/
+                document.getElementById("endtime").innerHTML = ("Date: " + date);
+                isstopped = true;
             }
         }
 
@@ -614,6 +650,7 @@ ${pad0(times[1], 2)}`;
 </script>
 <script>
     window.onbeforeunload = confirmExit;
+
     function confirmExit() {
         return "You have attempted to leave this page. Are you sure?";
     }

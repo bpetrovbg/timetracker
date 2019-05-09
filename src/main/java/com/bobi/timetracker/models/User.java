@@ -2,7 +2,6 @@ package com.bobi.timetracker.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Entity
 public class User {

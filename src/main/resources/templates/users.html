@@ -69,6 +69,7 @@
             <li><a href="/projects">Projects</a></li>
             <li><a href="/users">Users</a></li>
             <li><a href="/holidayadmin">Holidays</a></li>
+            <li><a href="/roles">Roles</a></li>
         </ul>
     </div>
 </div>
@@ -112,7 +113,7 @@
     let rolesDropdown = $('#select_role_dropdown');
     rolesDropdown.prop('selectedIndex', 0);
 
-    const urlUsers = 'http://192.168.0.102:8080/users/all';
+    const urlUsers = 'http://192.168.108.240:8080/users/all';
         $.getJSON(urlUsers, function (data) {
             console.log(data);
             $.each(data, function (key, user) {
@@ -125,7 +126,7 @@
                 console.log(user);
             });
 
-    const urlRoles = 'http://192.168.0.102:8080/roles/all';
+    const urlRoles = 'http://192.168.108.240:8080/roles/all';
         $.getJSON(urlRoles, function (data) {
             console.log(data);
             $.each(data, function (key, role) {
@@ -139,19 +140,23 @@
                     });
 
         $.ajax({
-                'url': 'http://192.168.0.102:8080/users/all',
+                'url': 'http://192.168.108.240:8080/users/all',
                 'method': 'GET',
                 'dataType': 'json',
                 processData: false,
                 'contentType': 'application/json',
                 success: function(data) {
                 console.log(data);
-                for(var i in data) {
-                    var id = data[i].id;
+                for(let i in data) {
+                    let id = data[i].id;
+                    let role;
+                    if(data[i].userrole) {
+                        role = data[i].userrole.name;
+                    } else {role = "Role not assigned!";}
                     $('#userstable > tbody:last-child').append('<tr><td id="id">' + data[i].id + '</td>+' +
                                        '<td id="username">' + data[i].username + '</td>' +
                                        '<td id="email">' + data[i].email + '</td>' +
-                                       '<td id="role">' + data[i].userrole.name + '</td>' +
+                                       '<td id="role">' + role + '</td>' +
                                        '</td></tr>');
                 }
                 }
@@ -159,7 +164,7 @@
 
         function updateUserRole() {
             $.ajax({
-            'url': 'http://192.168.0.102:8080/users/' + user + "/" + "roles/" + role,
+            'url': 'http://192.168.108.240:8080/users/' + user + "/" + "roles/" + role,
             'method': 'PUT',
                 'withCredentials':true,
             success: function(data) {

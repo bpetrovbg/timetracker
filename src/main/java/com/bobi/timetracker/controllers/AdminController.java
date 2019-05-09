@@ -1,8 +1,5 @@
 package com.bobi.timetracker.controllers;
 
-import com.bobi.timetracker.models.ProjectRepository;
-import com.bobi.timetracker.models.RecordRepository;
-import com.bobi.timetracker.models.UserRepository;
 import com.bobi.timetracker.services.CheckIsAdminService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,20 +9,15 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 public class AdminController {
-    private final UserRepository userRepository;
-    private final ProjectRepository projectRepository;
-    private final RecordRepository recordRepository;
-    private final CheckIsAdminService checkIsAdminService = new CheckIsAdminService();
+    private final CheckIsAdminService isAdminService;
 
-    public AdminController(UserRepository userRepository, ProjectRepository projectRepository, RecordRepository recordRepository) {
-        this.userRepository = userRepository;
-        this.projectRepository = projectRepository;
-        this.recordRepository = recordRepository;
+    public AdminController(CheckIsAdminService checkIsAdminService) {
+        this.isAdminService = checkIsAdminService;
     }
 
     @GetMapping(value = "/projects")
     private ModelAndView getProjectsPage(HttpSession session) {
-        if (checkIsAdminService.isAdmin(session)) {
+        if (isAdminService.isAdmin(session)) {
             return new ModelAndView("projects");
         } else {
             return null;
@@ -34,10 +26,19 @@ public class AdminController {
 
     @GetMapping(value = "/users")
     private ModelAndView getUsersPage(HttpSession session) {
-        if (checkIsAdminService.isAdmin(session)) {
+        if (isAdminService.isAdmin(session)) {
             return new ModelAndView("users");
         } else {
             return null;
         }
     }
+
+    /*@GetMapping(value = "/roles")
+    private ModelAndView getRolesPage(HttpSession session) {
+        if(isAdminService.isAdmin(session)) {
+            return new ModelAndView("roles");
+        } else {
+            return null;
+        }
+    }*/
 }

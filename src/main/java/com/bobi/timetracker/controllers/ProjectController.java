@@ -1,33 +1,33 @@
 package com.bobi.timetracker.controllers;
 
 import com.bobi.timetracker.models.Project;
-import com.bobi.timetracker.models.ProjectRepository;
 import com.bobi.timetracker.services.CheckIsAdminService;
+import com.bobi.timetracker.services.ProjectService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
-//@CrossOrigin(origins = "http://192.168.0.102:8080", maxAge = 3600)
+//@CrossOrigin(origins = "http://192.168.108.240:8080", maxAge = 3600)
 @RestController
 public class ProjectController {
-    private final ProjectRepository projectRepository;
-    private final CheckIsAdminService checkIsAdminService = new CheckIsAdminService();
+    private final CheckIsAdminService checkIsAdminService;
+    private final ProjectService projectService;
 
-    public ProjectController(ProjectRepository projectRepository) {
-        this.projectRepository = projectRepository;
+    public ProjectController(CheckIsAdminService checkIsAdminService, ProjectService projectService) {
+        this.checkIsAdminService = checkIsAdminService;
+        this.projectService = projectService;
     }
 
     @GetMapping("/projects/all")
     List<Project> getAllProjects() {
-        return (List<Project>) projectRepository.findAll();
+        return projectService.getAllProjects();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/projects/add", consumes = "application/json", produces = "application/json")
     ModelAndView addProject(@RequestBody Project newProject, HttpSession session) {
         if(checkIsAdminService.isAdmin(session)) {
-            projectRepository.save(newProject);
+            projectService.addProject(newProject);
             return new ModelAndView("/projects");
         }
         return null;
@@ -36,8 +36,7 @@ public class ProjectController {
     @RequestMapping(value = "/projects/remove/{id}", method = RequestMethod.DELETE)
     public ModelAndView deleteProject(@PathVariable("id") int projectid, HttpSession session) {
         if (checkIsAdminService.isAdmin(session)) {
-            Project project = projectRepository.findProjectById(projectid);
-            projectRepository.delete(project);
+            projectService.removeProject(projectid);
             return new ModelAndView("/projects");
         } else {
             return null;

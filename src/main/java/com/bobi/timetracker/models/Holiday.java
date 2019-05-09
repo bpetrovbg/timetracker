@@ -1,7 +1,6 @@
 package com.bobi.timetracker.models;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 public class Holiday {

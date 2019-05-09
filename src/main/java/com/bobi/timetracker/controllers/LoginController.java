@@ -1,10 +1,13 @@
 package com.bobi.timetracker.controllers;
 
 import com.bobi.timetracker.models.User;
-import com.bobi.timetracker.models.UserRepository;
+import com.bobi.timetracker.services.LoginService;
 import com.bobi.timetracker.utilities.SHA256Helper;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -15,10 +18,10 @@ import java.util.Map;
 
 @RestController
 public class LoginController {
-    private final UserRepository userRepository;
+    private final LoginService loginService;
 
-    public LoginController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @GetMapping("/login")
@@ -34,7 +37,7 @@ public class LoginController {
     @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
     public ModelAndView loginAndReturnUser(@RequestParam Map<String, String> body, HttpSession session) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         SHA256Helper helper = new SHA256Helper();
-        User userToLogin = userRepository.findUserByUsername(body.get("username"));
+        User userToLogin = loginService.getUserByUsername(body.get("username"));
         if (userToLogin != null) {
             if (helper.inputPassHash(body.get("password")).equals(userToLogin.getPassword())) {
                 if (userToLogin.getUserrole() != null && userToLogin.getUserrole().getName().equals("admin")) {

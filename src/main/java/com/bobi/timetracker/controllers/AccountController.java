@@ -1,24 +1,15 @@
 package com.bobi.timetracker.controllers;
 
-import com.bobi.timetracker.models.Role;
-import com.bobi.timetracker.models.RoleRepository;
 import com.bobi.timetracker.models.User;
-import com.bobi.timetracker.models.UserRepository;
+import com.bobi.timetracker.services.AccountService;
 import com.bobi.timetracker.services.CheckIsAdminService;
 import com.bobi.timetracker.utilities.SHA256Helper;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-import reactor.netty.http.Cookies;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,19 +19,17 @@ import java.util.Map;
 
 @RestController
 public class AccountController {
-    private final UserRepository userRepository;
     private final CheckIsAdminService isAdminService;
-    private final RoleRepository roleRepository;
+    private final AccountService accountService;
 
-    public AccountController(UserRepository userRepository, CheckIsAdminService isAdminService, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
+    public AccountController(CheckIsAdminService isAdminService, AccountService accountService) {
         this.isAdminService = isAdminService;
-        this.roleRepository = roleRepository;
+        this.accountService = accountService;
     }
 
     @GetMapping("/users/all")
     List<User> getAllUsers() {
-        return (List<User>) userRepository.findAll();
+        return accountService.getAllUsers();
     }
 
     @GetMapping("/myaccount")
@@ -59,8 +48,7 @@ public class AccountController {
     User addUser(@RequestBody User newUser) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         SHA256Helper passHelper = new SHA256Helper();
         newUser.setPassword(passHelper.inputPassHash(newUser.getPassword()));
-        userRepository.save(newUser);
-        return newUser;
+        return accountService.addUser(newUser);
     }
 
     @PostMapping(value = "/users/createaccount", consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE})
@@ -69,17 +57,14 @@ public class AccountController {
         User newUser = new User();
         newUser.setUsername(body.get("username"));
         newUser.setPassword(passHelper.inputPassHash(body.get("password")));
-        userRepository.save(newUser);
-        return new ModelAndView("login");
+        accountService.addUser(newUser);
+        return new ModelAndView("redirect:/login");
     }
 
     @PutMapping(value = "/users/{user}/roles/{role}")
     public ModelAndView updateUserRole(@PathVariable("user") int userid, @PathVariable("role") int roleid, HttpSession session) throws IOException {
         if (isAdminService.isAdmin(session)) {
-            User user = userRepository.findUserById(userid);
-            Role role = roleRepository.findRoleById(roleid);
-            user.setUserrole(role);
-            userRepository.save(user);
+            accountService.updateUserRole(userid, roleid);
             return new ModelAndView("users");
         } return null;
     }
@@ -87,11 +72,8 @@ public class AccountController {
     @PostMapping(value = "/myaccount/mail", consumes = "application/json")
     public ModelAndView updateUserMail(@RequestBody String newMail, HttpSession session) throws JSONException {
         if (session.getAttribute("currentuser") != null) {
-            JSONObject jsonObject = new JSONObject(newMail);
-            User user = userRepository.findUserById(((User) session.getAttribute("currentuser")).getId());
-            user.setEmail(jsonObject.getString("mail"));
-            userRepository.save(user);
-            session.setAttribute("currentuser", user);
+            JSONObject mail = new JSONObject(newMail);
+            session.setAttribute("currentuser", accountService.updateUserMail(((User) session.getAttribute("currentuser")).getId(), mail.getString("mail")));
             return new ModelAndView("myaccount");
         } return null;
     }
@@ -99,12 +81,10 @@ public class AccountController {
     @PostMapping(value = "/myaccount/changepassword", consumes = "application/json")
     public ModelAndView changeUserPassword(@RequestBody String newPassword, HttpSession session) throws JSONException, IOException, NoSuchAlgorithmException {
         if (session.getAttribute("currentuser") != null) {
-            JSONObject jsonObject = new JSONObject(newPassword);
-            User user = userRepository.findUserById(((User) session.getAttribute("currentuser")).getId());
+            JSONObject password = new JSONObject(newPassword);
             SHA256Helper helper = new SHA256Helper();
-            user.setPassword(helper.inputPassHash(jsonObject.getString("newpassword")));
-            userRepository.save(user);
-            session.setAttribute("currentuser", user);
+            String hashedPassword = helper.inputPassHash(password.getString("newpassword"));
+            session.setAttribute("currentuser", accountService.changeUserPassword(((User) session.getAttribute("currentuser")).getId(), hashedPassword));
             return new ModelAndView("myaccount");
         }
         return null;
