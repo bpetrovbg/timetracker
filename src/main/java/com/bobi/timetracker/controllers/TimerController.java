@@ -36,11 +36,11 @@ public class TimerController {
         }
     }
 
-    @PostMapping(value = "/timer/newstart", consumes = "application/json")
+    /*@PostMapping(value = "/timer/newstart", consumes = "application/json")
     public Record getUserProjectTime(@RequestBody Record record) {
         return recordService.getRecordByUserAndprojectAndStarttime(record.getUser(),
                 record.getProject(), record.getStarttime());
-    }
+    }*/
 
     @PutMapping(value = "/timer/stop", consumes = "application/json")
     public Record saveStopTime(@RequestBody Record record) {

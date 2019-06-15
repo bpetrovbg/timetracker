@@ -194,7 +194,7 @@
 </div>
 <script>
     $.ajax({
-        'url': 'http://192.168.108.240:8080/roles/all',
+        'url': 'http://192.168.0.103:8080/roles/all',
         'method': 'GET',
         'dataType': 'json',
         processData: false,
@@ -215,7 +215,7 @@
         console.log(rolename);
 
         $.ajax({
-            'url': 'http://192.168.108.240:8080/roles/add',
+            'url': 'http://192.168.0.103:8080/roles/add',
             'method': 'POST',
             'dataType': 'json',
             'withCredentials':true,

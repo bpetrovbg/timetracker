@@ -56,7 +56,7 @@ public class HistoryController {
 
     @GetMapping(value = "/history/exportall")
     public ModelAndView exportAllHistory() {
-        return new ModelAndView(new ExcelView(), "userprojecttime", historyService.getAllRecords());
+        return new ModelAndView(new ExcelView(), "records", historyService.getAllRecords());
     }
 
     @GetMapping(value = "/history/{user}/{month}/{year}")
@@ -69,7 +69,7 @@ public class HistoryController {
         inputJSON.put("month", month);
         inputJSON.put("year", year);
         List<Record> recordList = historyService.getUserRecords(inputJSON.toString());
-        return new ModelAndView(new ExcelView(), "userprojecttime", recordList);
+        return new ModelAndView(new ExcelView(), "records", recordList);
     }
 
     @GetMapping(value = "history/{user}/{project}/{day}/{month}/{year}")

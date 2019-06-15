@@ -25,7 +25,7 @@ public class HolidayService {
         return holidayRepository.findHolidaysByUser(user);
     }
 
-    public List<Holiday> getHolidaysByUserID(int userid) {
+    public List<Holiday> getHolidaysByUserID(long userid) {
         User user = userRepository.findUserById(userid);
         return holidayRepository.findHolidaysByUser(user);
     }
@@ -38,7 +38,7 @@ public class HolidayService {
         return holidayRepository.save(newHoliday);
     }
 
-    public Holiday changeHolidayStatus(int holidayid) {
+    public Holiday changeHolidayStatus(Long holidayid) {
         Holiday holiday = holidayRepository.findHolidayById(holidayid);
         holiday.setApproved(!holiday.getApproved());
         return holidayRepository.save(holiday);
@@ -46,7 +46,7 @@ public class HolidayService {
 
     public List<Holiday> getUserHolidays(String jsonString) throws JSONException {
         JSONObject inputJSON = new JSONObject(jsonString);
-        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("user").toString()));
+        User currentUser = userRepository.findUserById(Long.parseLong(inputJSON.get("user").toString()));
         List<Holiday> userHolidaysList = holidayRepository.findHolidaysByUser(currentUser);
         List<Holiday> allQueries = new ArrayList<>();
 

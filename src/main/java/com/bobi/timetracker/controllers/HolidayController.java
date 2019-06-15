@@ -72,7 +72,7 @@ public class HolidayController {
     }
 
     @PutMapping(value = "holidayadmin/{holidayid}")
-    public Holiday changeHolidayStatus(@PathVariable("holidayid") int holidayid, HttpSession session) {
+    public Holiday changeHolidayStatus(@PathVariable("holidayid") Long holidayid, HttpSession session) {
         if (isAdminService.isAdmin(session)) {
             return holidayService.changeHolidayStatus(holidayid);
         }

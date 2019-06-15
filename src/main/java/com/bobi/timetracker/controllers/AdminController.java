@@ -33,12 +33,12 @@ public class AdminController {
         }
     }
 
-    /*@GetMapping(value = "/roles")
+    @GetMapping(value = "/roles")
     private ModelAndView getRolesPage(HttpSession session) {
         if(isAdminService.isAdmin(session)) {
             return new ModelAndView("roles");
         } else {
             return null;
         }
-    }*/
+    }
 }

@@ -27,7 +27,7 @@ public class HistoryService {
 
     public List<Record> getUserRecords(String jsonString) throws JSONException {
         JSONObject inputJSON = new JSONObject(jsonString);
-        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("user").toString()));
+        User currentUser = userRepository.findUserById(Long.parseLong(inputJSON.get("user").toString()));
         List<Record> recordList = recordRepository.findByUser(currentUser);
         List<Record> allQueries = new ArrayList<Record>();
 
@@ -42,7 +42,7 @@ public class HistoryService {
 
     public Record getSingleRecord(String jsonString) throws JSONException {
         JSONObject inputJSON = new JSONObject(jsonString);
-        User currentUser = userRepository.findUserById(Integer.parseInt(inputJSON.get("user").toString()));
+        User currentUser = userRepository.findUserById(Long.parseLong(inputJSON.get("user").toString()));
         List<Record> recordList = recordRepository.findByUser(currentUser);
 
         for (Record record : recordList) {

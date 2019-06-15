@@ -21,7 +21,7 @@ public class ExcelView extends AbstractXlsView {
         response.setHeader("Content-Disposition", "attachment; filename=\"reportAll.xls\"");
 
         @SuppressWarnings("unchecked")
-        List<Record> recordList = (List<Record>) model.get("userprojecttime");
+        List<Record> recordList = (List<Record>) model.get("records");
 
         // create excel xls sheet
         Sheet sheet = workbook.createSheet("All data");

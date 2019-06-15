@@ -22,20 +22,20 @@ public class AccountService {
         return userRepository.save(user);
     }
 
-    public void updateUserRole(int userid, int roleid) {
+    public void updateUserRole(long userid, long roleid) {
         User user = userRepository.findUserById(userid);
         Role role = roleRepository.findRoleById(roleid);
         user.setUserrole(role);
         userRepository.save(user);
     }
 
-    public User updateUserMail(int userid, String mail) {
+    public User updateUserMail(long userid, String mail) {
         User user = userRepository.findUserById(userid);
         user.setEmail(mail);
         return userRepository.save(user);
     }
 
-    public User changeUserPassword(int userid, String newPassword) {
+    public User changeUserPassword(long userid, String newPassword) {
         User user = userRepository.findUserById(userid);
         user.setPassword(newPassword);
         return userRepository.save(user);

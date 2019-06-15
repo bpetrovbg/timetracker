@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class Holiday {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @Column(name = "description", nullable = false)
     private String description;
@@ -25,11 +25,11 @@ public class Holiday {
 
     public Holiday() {}
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

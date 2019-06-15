@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @Size(min = 1)
     @Column(name = "name", unique = true, nullable = false)
@@ -20,14 +20,14 @@ public class Project {
     }
 
     public Project(String id) {
-        this.setId(Integer.valueOf(id));
+        this.setId(Long.valueOf(id));
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

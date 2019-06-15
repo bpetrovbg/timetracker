@@ -16,11 +16,6 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/roles")
-    private ModelAndView getRolesPage(HttpSession session) {
-            return new ModelAndView("roles");
-    }
-
     @GetMapping("/roles/all")
     public List<Role> getAllRoles() {
         return roleService.getAllRoles();

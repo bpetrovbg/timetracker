@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface HolidayRepository extends CrudRepository<Holiday, Integer> {
+public interface HolidayRepository extends CrudRepository<Holiday, Long> {
     List<Holiday> findHolidaysByUser(User user);
-    Holiday findHolidayById(Integer holidayid);
+    Holiday findHolidayById(Long holidayid);
 }

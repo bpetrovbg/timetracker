@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(optional = false)
     private User user;
@@ -21,7 +21,7 @@ public class Record {
     @Column(name = "endtime")
     private Timestamp endtime;
 
-    //overtime in minutes => Integer
+    //overtime in minutes => Long
     @Column(name = "overtime")
     private Long overtime;
 
@@ -31,7 +31,7 @@ public class Record {
     @Column(name = "newpause")
     private Timestamp newpausetime;
 
-    //pausetime in minutes => Integer
+    //pausetime in minutes => Long
     @Column(name = "pause")
     private Long pausetime;
 
@@ -100,11 +100,11 @@ public class Record {
         this.pausetime = pausetime;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

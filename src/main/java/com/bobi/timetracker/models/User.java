@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @Size(min = 1)
     @Column(name = "username", unique = true, nullable = false)
@@ -26,7 +26,7 @@ public class User {
     public User() {
     }
 
-    public User(Integer id) {
+    public User(Long id) {
         this.setId(id);
     }
 
@@ -38,11 +38,11 @@ public class User {
         this.role = role;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

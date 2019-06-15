@@ -8,7 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-//@CrossOrigin(origins = "http://192.168.108.240:8080", maxAge = 3600)
+//@CrossOrigin(origins = "http://192.168.0.103:8080", maxAge = 3600)
 @RestController
 public class ProjectController {
     private final CheckIsAdminService checkIsAdminService;
@@ -33,7 +33,7 @@ public class ProjectController {
         return null;
     }
 
-    @RequestMapping(value = "/projects/remove/{id}", method = RequestMethod.DELETE)
+    /*@RequestMapping(value = "/projects/remove/{id}", method = RequestMethod.DELETE)
     public ModelAndView deleteProject(@PathVariable("id") int projectid, HttpSession session) {
         if (checkIsAdminService.isAdmin(session)) {
             projectService.removeProject(projectid);
@@ -41,5 +41,5 @@ public class ProjectController {
         } else {
             return null;
         }
-    }
+    }*/
 }

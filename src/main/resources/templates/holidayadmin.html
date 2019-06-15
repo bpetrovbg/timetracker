@@ -169,7 +169,7 @@
     let userDropdown = $('#select_user_dropdown');
     userDropdown.prop('selectedIndex', 0);
 
-    const urlUsers = 'http://192.168.108.240:8080/users/all';
+    const urlUsers = 'http://192.168.0.103:8080/users/all';
     $.getJSON(urlUsers, function (data) {
         //console.log(data);
         $.each(data, function (key, user) {
@@ -178,7 +178,7 @@
     });
 
     $.ajax({
-        'url': 'http://192.168.108.240:8080/holiday/all',
+        'url': 'http://192.168.0.103:8080/holiday/all',
         'method': 'GET',
         'dataType': 'json',
         processData: false,
@@ -200,7 +200,7 @@
 <script>
     function updateHolidayStatus(id) {
         $.ajax({
-            'url': 'http://192.168.108.240:8080/holidayadmin/' + id,
+            'url': 'http://192.168.0.103:8080/holidayadmin/' + id,
             'method': 'PUT',
             success: function () {
                 location.reload();
@@ -219,7 +219,7 @@
         let dropdownuser = $('#select_user_dropdown').val();
         let dropdownyear = $('#select_year_dropdown').val();
         $.ajax({
-            'url': 'http://192.168.108.240:8080/holidayadmin',
+            'url': 'http://192.168.0.103:8080/holidayadmin',
             'method': 'POST',
             'withCredentials': true,
             'dataType': 'json',
@@ -246,7 +246,7 @@
 
     function updateHolidayStatusForSingleUser(id) {
         $.ajax({
-            'url': 'http://192.168.108.240:8080/holidayadmin/' + id,
+            'url': 'http://192.168.0.103:8080/holidayadmin/' + id,
             'method': 'PUT',
             success: function () {
                 queryUserHoliday();
@@ -256,12 +256,12 @@
 
     function downloadUserHoliday() {
         let dropdownyear = $('#select_year_dropdown').val();
-        let url = 'http://192.168.108.240:8080/holiday/' + user + "/" + dropdownyear;
+        let url = 'http://192.168.0.103:8080/holiday/' + user + "/" + dropdownyear;
         window.open(url);
     }
 
     function exportAllHolidays() {
-        let url = 'http://192.168.108.240:8080/holiday/exportall';
+        let url = 'http://192.168.0.103:8080/holiday/exportall';
         window.open(url);
     }
 </script>
@@ -296,7 +296,7 @@
 
     function addHoliday() {
         $.ajax({
-            'url': 'http://192.168.108.240:8080/holiday/add',
+            'url': 'http://192.168.0.103:8080/holiday/add',
             'method': 'POST',
             'dataType': 'json',
             'withCredentials':true,
